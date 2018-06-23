@@ -587,1235 +587,1233 @@
 </style>
 
 <script>
-    import { mapState } from 'vuex';
-    export default {
-        data: function () {
-            return {
-                errors: [],
-                suplier: [],
-                satuan: [],
-                tbs_pembelians: [],
-                tbsPembelianData : {},
-                url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-                url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
-                url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
-                url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
-                url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
-                url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
-                url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
-                urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
-                urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/template-excel"),
-                inputTbsPembelian: {
-                    nama_produk : '',
-                    produk : '',
-                    id_produk : '',
-                    jumlah_produk : '',
-                    harga_produk : '',
-                    id_tbs : '',
-                    satuan_produk: '',
-                    suplier_order: '',
-                    suplier_penerimaan: '',
-                },
-                inputPembayaranPembelian:{
-                    potongan_persen: 0,
-                    potongan_faktur: 0,
-                    subtotal: 0,
-                    pembayaran: 0,
-                    total_akhir: 0,
-                    kembalian: 0,
-                    kredit: 0,
-                    jatuh_tempo: '',
-                    keterangan: '',
-                    subtotal_number_format:0, 
-                    suplier: '',
-                    cara_bayar: '',
-                    status_pembelian: '',
-                    ppn: '',
-                    potongan: 0,
-                },
-                tambahSuplier: {
-                    nama_suplier : '',
-                    alamat : '',
-                    no_telp : '',
-                    contact_person : '',
-                },
-                tambahKas: {
-                    kode_kas : '',
-                    nama_kas : '',
-                    status_kas : 0,
-                    default_kas : 0
-                },
-                placeholder_produk: {
-                    placeholder: '--PILIH PRODUK (F1)--',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                placeholder_satuan: {
-                    placeholder: '--PILIH SATUAN--',
-                    sortField: 'text',
-                    openOnFocus : true,
-                },
-                placeholder_suplier: {
-                    placeholder: 'ORDER PEMBELIAN (F4)',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                placeholder_penerimaan: {
-                    placeholder: 'PENERIMAAN PRODUK',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                placeholder_cara_bayar: {
-                    placeholder: '--PILIH CARA BAYAR (F6)--',
-                    sortField: 'text',
-                    openOnFocus : true
-                },
-                separator: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '',
-                    suffix: '',
-                    precision: 2,
-                    masked: false /* doesn't work with directive */
-                },
-                pemisahTitik: {
-                    decimal: ',',
-                    thousands: '.',
-                    prefix: '',
-                    suffix: '',
-                    precision: 0,
-                    masked: false /* doesn't work with directive */
-                },      
-                disabled: {
-to: new Date(), // Disable all dates up to specific date
-},
-pencarian: '',
-loading: true,
-seen : false,
-
-}
-
-},
-mounted() {
-    var app = this;
-    app.$store.dispatch('LOAD_PRODUK_LIST')
-    app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
-    app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
-    app.$store.dispatch('LOAD_KAS_LIST')  
-    app.dataSuplier();
-    app.getResults();
-},
-computed : mapState ({    
-    produk(){
-        return this.$store.getters.produkStok
-    },
-    cara_bayar(){
-        return this.$store.state.kas
-    }, 
-    supliers(){
-        return this.$store.state.suplier_order_pembelian
-    },
-    suplier_penerimaans(){
-        return this.$store.state.suplier_penerimaan
-    },
-    default_kas: state => state.default_kas
-}),
-watch: {
-// whenever question changes, this function will run
-pencarian: function (newQuestion) {
-    this.getHasilPencarian();
-    this.loading = true;  
-},
-'inputTbsPembelian.produk': function (newQuestion) {
-    this.pilihProduk();  
-},
-'inputTbsPembelian.suplier_order': function (newQuestion) {
-    this.pilihSuplierOrder();  
-},
-'inputTbsPembelian.suplier_penerimaan': function (newQuestion) {
-    this.pilihSuplierPenerimaan();  
-},
-'inputPembayaranPembelian.pembayaran':function (val){
-    if (val == '') {
-        val = 0
-    }
-    this.hitungKembalian(val)
-},
-'inputPembayaranPembelian.potongan_faktur':function(){
-    this.hitungPotonganFaktur()
-},
-'inputTbsPembelian.satuan_produk':function(){
-    this.hitungHargaKonversi()
-}
-
-},
-methods: {
-    openSelectizeProduk(){      
-        this.$refs.produk.$el.selectize.focus();
-    },
-    openSelectizeSuplier(){      
-        this.$refs.suplier.$el.selectize.focus();
-    },
-    openSelectizeKas(){      
-        this.$refs.cara_bayar.$el.selectize.focus();
-    },
-    getResults(page) {
-        var app = this; 
-        if (typeof page === 'undefined') {
-            page = 1;
+import { mapState } from 'vuex';
+export default {
+    data: function () {
+        return {
+            errors: [],
+            suplier: [],
+            satuan: [],
+            tbs_pembelians: [],
+            tbsPembelianData : {},
+            url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+            url_produk : window.location.origin+(window.location.pathname).replace("dashboard", "produk"),
+            url_kas : window.location.origin+(window.location.pathname).replace("dashboard", "penjualan"),
+            url_cek_total_kas : window.location.origin+(window.location.pathname).replace("dashboard", ""),
+            url_suplier : window.location.origin+(window.location.pathname).replace("dashboard", "suplier"),
+            url_satuan : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/satuan-konversi"),
+            url_tambah_kas : window.location.origin+(window.location.pathname).replace("dashboard", "kas"),
+            urlImport : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/import-excel"),
+            urlTemplate : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian/template-excel"),
+            inputTbsPembelian: {
+                nama_produk : '',
+                produk : '',
+                id_produk : '',
+                jumlah_produk : '',
+                harga_produk : '',
+                id_tbs : '',
+                satuan_produk: '',
+                suplier_order: '',
+                suplier_penerimaan: '',
+            },
+            inputPembayaranPembelian:{
+                potongan_persen: 0,
+                potongan_faktur: 0,
+                subtotal: 0,
+                pembayaran: 0,
+                total_akhir: 0,
+                kembalian: 0,
+                kredit: 0,
+                jatuh_tempo: '',
+                keterangan: '',
+                subtotal_number_format:0, 
+                suplier: '',
+                cara_bayar: '',
+                status_pembelian: '',
+                ppn: '',
+                potongan: 0,
+            },
+            tambahSuplier: {
+                nama_suplier : '',
+                alamat : '',
+                no_telp : '',
+                contact_person : '',
+            },
+            tambahKas: {
+                kode_kas : '',
+                nama_kas : '',
+                status_kas : 0,
+                default_kas : 0
+            },
+            placeholder_produk: {
+                placeholder: '--PILIH PRODUK (F1)--',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            placeholder_satuan: {
+                placeholder: '--PILIH SATUAN--',
+                sortField: 'text',
+                openOnFocus : true,
+            },
+            placeholder_suplier: {
+                placeholder: 'ORDER PEMBELIAN (F4)',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            placeholder_penerimaan: {
+                placeholder: 'PENERIMAAN PRODUK',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            placeholder_cara_bayar: {
+                placeholder: '--PILIH CARA BAYAR (F6)--',
+                sortField: 'text',
+                openOnFocus : true
+            },
+            separator: {
+                decimal: ',',
+                thousands: '.',
+                prefix: '',
+                suffix: '',
+                precision: 2,
+                masked: false /* doesn't work with directive */
+            },
+            pemisahTitik: {
+                decimal: ',',
+                thousands: '.',
+                prefix: '',
+                suffix: '',
+                precision: 0,
+                masked: false /* doesn't work with directive */
+            },      
+            disabled: {
+                to: new Date(), // Disable all dates up to specific date
+            },
+            pencarian: '',
+            loading: true,
+            seen : false,
         }
-        axios.get(app.url+'/view-tbs-pembelian?page='+page)
-        .then(function (resp) {
-            app.tbs_pembelians = resp.data.data;
-            app.tbsPembelianData = resp.data;       
-            app.loading = false;
-            app.seen = true;
-            app.openSelectizeProduk();
-            app.inputPembayaranPembelian.cara_bayar = app.default_kas
-
-            if (app.inputPembayaranPembelian.subtotal == 0) {          
-                app.getSubtotalTbs(); 
-            } 
-            app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
-            app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
-            app.dataSuplier();
-
-        })
-        .catch(function (resp) {
-            console.log(resp);
-            app.loading = false;
-            app.seen = true;
-            alert("Tidak Dapat Memuat Pembelian");
-        });
-},//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
-getSubtotalTbs(){
-    var app =  this;
-    var jenis_tbs = 1;
-    axios.get(app.url+'/subtotal-tbs-pembelian/'+jenis_tbs)
-    .then(function (resp) {
-        app.inputPembayaranPembelian.subtotal += resp.data.subtotal;
-        app.inputPembayaranPembelian.total_akhir += resp.data.subtotal;
-        app.inputPembayaranPembelian.kredit += resp.data.subtotal;
-    })
-    .catch(function (resp) {
-        console.log(resp);
-    });
-}, 
-getSatuan(id_produk){
-    var app = this;
-    var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
-
-    axios.get(app.url_satuan+'/'+id_produk)
-    .then(function (resp) {
-
-        app.satuan = resp.data;
-        if (typeof satuan_tbs == "undefined") {
-
-            $.each(resp.data, function (i, item) {
-                if (resp.data[i].id === resp.data[i].satuan_dasar) {
-                    app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-                }
-            });
-
-        }else{
-
-            $.each(resp.data, function (i, item) {
-                if (resp.data[i].id === parseInt(satuan_tbs)) {
-                    app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
-                }
-            });
-
-        }
-    })
-    .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Satuan Produk");
-    });
-},    
-getHasilPencarian(page){
-    var app = this;
-    if (typeof page === 'undefined') {
-        page = 1;
-    }
-    axios.get(app.url+'/pencarian-tbs-pembelian?search='+app.pencarian+'&page='+page)
-    .then(function (resp) {
-        app.tbs_pembelians = resp.data.data;
-        app.tbsPembelianData = resp.data;
-        app.loading = false;
-        app.seen = true;
-    })
-    .catch(function (resp) {
-        console.log(resp);
-        alert("Tidak Dapat Memuat Pembelian");
-    });
-}, //END FUNGSI UNTUK PAGINATION SEARCH     
-dataSuplier() {
-    var app = this;
-    axios.get(app.url+'/pilih-suplier').then(function (resp) {
-        app.suplier = resp.data;
-        $.each(resp.data, function (i, item) {
-            if (resp.data[i].nama_suplier == "UMUM") {
-                app.inputPembayaranPembelian.suplier  = resp.data[i].id 
-            }else{
-                app.inputPembayaranPembelian.suplier  = resp.data[i].id 
-            }
-        });
-    })
-    .catch(function (resp) {
-        alert("Tidak Bisa Memuat Suplier");
-    });
-},//END FUNGSI UNTUK SELECTIZE SUPLIER 
-tambahSupplier(){
-    $("#modal_tambah_suplier").show();
-    this.$refs.nama_suplier.$el.focus();
-},
-tambahModalKas(){
-    $("#modal_tambah_kas").show();
-    this.$refs.kode_kas.$el.focus(); 
-},
-saveFormSupplier() {
-    var app = this;
-    var newsuplier = app.tambahSuplier;
-    axios.post(app.url_suplier, newsuplier)
-    .then(function (resp) {
-        app.message = 'Menambah Suplier '+ app.tambahSuplier.nama_suplier;
-        app.alert(app.message);
-        app.tambahSuplier.nama_suplier = '';
-        app.tambahSuplier.alamat = '';
-        app.tambahSuplier.no_telp = '';
-        app.tambahSuplier.contact_person = '';
-        app.errors = '';
+    },
+    mounted() {
+        var app = this;
+        app.$store.dispatch('LOAD_PRODUK_LIST')
+        app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
+        app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
+        app.$store.dispatch('LOAD_KAS_LIST')  
         app.dataSuplier();
-        $("#modal_tambah_suplier").hide();
-    })
-    .catch(function (resp) {
-        app.success = false;
-        app.errors = resp.response.data.errors;
-    });
-},
-saveFormKas() {
-    var app = this;
-    var newkas = app.tambahKas;
-    axios.post(app.url_tambah_kas, newkas)
-    .then(function (resp) {
-        app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
-        app.alert(app.message);
-        app.tambahKas.kode_kas = ''
-        app.tambahKas.nama_kas = ''
-        app.tambahKas.status_kas = 0
-        app.tambahKas.default_kas = 0
-        app.errors = '';
-        app.$store.dispatch('LOAD_KAS_LIST') 
-        $("#modal_tambah_kas").hide();
-
-    })
-    .catch(function (resp) {
-        app.success = false;
-        app.errors = resp.response.data.errors;
-    });
-},
-defaultKas() {
-    var app = this;
-    var toogle = app.tambahKas.default_kas;
-
-    if (toogle == true) {
-        app = this;
-        app.$swal({
-            title: "Konfirmasi",
-            text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then((confirm) => {
-            if (confirm) {
-                toogle.prop('checked', true);
-            } else {
-                toogle.prop('checked', false);
+        app.getResults();
+    },
+    computed : mapState ({    
+        produk(){
+            return this.$store.getters.produkStok
+        },
+        cara_bayar(){
+            return this.$store.state.kas
+        }, 
+        supliers(){
+            return this.$store.state.suplier_order_pembelian
+        },
+        suplier_penerimaans(){
+            return this.$store.state.suplier_penerimaan
+        },
+        default_kas: state => state.default_kas
+    }),
+    watch: {
+        // whenever question changes, this function will run
+        pencarian: function (newQuestion) {
+            this.getHasilPencarian();
+            this.loading = true;  
+        },
+        'inputTbsPembelian.produk': function (newQuestion) {
+            this.pilihProduk();  
+        },
+        'inputTbsPembelian.suplier_order': function (newQuestion) {
+            this.pilihSuplierOrder();  
+        },
+        'inputTbsPembelian.suplier_penerimaan': function (newQuestion) {
+            this.pilihSuplierPenerimaan();  
+        },
+        'inputPembayaranPembelian.pembayaran':function (val){
+            if (val == '') {
+                val = 0
             }
-        });
-    }  
-},
-alertTbs(pesan) {
-    this.$swal({
-        text: pesan,
-        icon: "warning",
-    });
-},
-alert(pesan) {
-    this.$swal({
-        title: "Berhasil ",
-        text: pesan,
-        icon: "success",
-        buttons: false,
-        timer: 1000,
-    });
-},//alert untuk berhasil proses crud
-deleteEntry(id, index,nama_produk,subtotal_lama) {
-
-    var app = this;
-    app.$swal({
-        text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-
-            this.prosesDelete(id,nama_produk,subtotal_lama);
-
-        } else {
-
-            app.$swal.close();
-
+            this.hitungKembalian(val)
+        },
+        'inputPembayaranPembelian.potongan_faktur':function(){
+            this.hitungPotonganFaktur()
+        },
+        'inputTbsPembelian.satuan_produk':function(){
+            this.hitungHargaKonversi()
         }
-    });
+    },
+    methods: {
+        openSelectizeProduk(){      
+            this.$refs.produk.$el.selectize.focus();
+        },
+        openSelectizeSuplier(){      
+            this.$refs.suplier.$el.selectize.focus();
+        },
+        openSelectizeKas(){      
+            this.$refs.cara_bayar.$el.selectize.focus();
+        },
+        getResults(page) {
+            var app = this; 
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/view-tbs-pembelian?page='+page)
+            .then(function (resp) {
+                app.tbs_pembelians = resp.data.data;
+                app.tbsPembelianData = resp.data;       
+                app.loading = false;
+                app.seen = true;
+                app.openSelectizeProduk();
+                app.inputPembayaranPembelian.cara_bayar = app.default_kas
+
+                if (app.inputPembayaranPembelian.subtotal == 0) {          
+                    app.getSubtotalTbs(); 
+                } 
+                app.$store.dispatch('LOAD_SUPLIER_ORDER_PEMBELIAN_LIST');
+                app.$store.dispatch('LOAD_SUPLIER_PENERIMAAN_LIST');
+                app.dataSuplier();
+
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                app.loading = false;
+                app.seen = true;
+                alert("Tidak Dapat Memuat Pembelian");
+            });
+        },//END FUNGSI UNTUK PAGINATION TAMPILAN AWAL / DOCUMENT READY 
+        getSubtotalTbs(){
+            var app =  this;
+            var jenis_tbs = 1;
+            axios.get(app.url+'/subtotal-tbs-pembelian/'+jenis_tbs)
+            .then(function (resp) {
+                app.inputPembayaranPembelian.subtotal += resp.data.subtotal;
+                app.inputPembayaranPembelian.total_akhir += resp.data.subtotal;
+                app.inputPembayaranPembelian.kredit += resp.data.subtotal;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+            });
+        }, 
+        getSatuan(id_produk){
+            var app = this;
+            var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+            axios.get(app.url_satuan+'/'+id_produk)
+            .then(function (resp) {
+
+                app.satuan = resp.data;
+                if (typeof satuan_tbs == "undefined") {
+
+                    $.each(resp.data, function (i, item) {
+                        if (resp.data[i].id === resp.data[i].satuan_dasar) {
+                            app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+                        }
+                    });
+
+                }else{
+
+                    $.each(resp.data, function (i, item) {
+                        if (resp.data[i].id === parseInt(satuan_tbs)) {
+                            app.inputTbsPembelian.satuan_produk = resp.data[i].satuan;
+                        }
+                    });
+
+                }
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Satuan Produk");
+            });
+        },    
+        getHasilPencarian(page){
+            var app = this;
+            if (typeof page === 'undefined') {
+                page = 1;
+            }
+            axios.get(app.url+'/pencarian-tbs-pembelian?search='+app.pencarian+'&page='+page)
+            .then(function (resp) {
+                app.tbs_pembelians = resp.data.data;
+                app.tbsPembelianData = resp.data;
+                app.loading = false;
+                app.seen = true;
+            })
+            .catch(function (resp) {
+                console.log(resp);
+                alert("Tidak Dapat Memuat Pembelian");
+            });
+        }, //END FUNGSI UNTUK PAGINATION SEARCH     
+        dataSuplier() {
+            var app = this;
+            axios.get(app.url+'/pilih-suplier').then(function (resp) {
+                app.suplier = resp.data;
+                $.each(resp.data, function (i, item) {
+                    if (resp.data[i].nama_suplier == "UMUM") {
+                        app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                    }else{
+                        app.inputPembayaranPembelian.suplier  = resp.data[i].id 
+                    }
+                });
+            })
+            .catch(function (resp) {
+                alert("Tidak Bisa Memuat Suplier");
+            });
+        },//END FUNGSI UNTUK SELECTIZE SUPLIER 
+        tambahSupplier(){
+            $("#modal_tambah_suplier").show();
+            this.$refs.nama_suplier.$el.focus();
+        },
+        tambahModalKas(){
+            $("#modal_tambah_kas").show();
+            this.$refs.kode_kas.$el.focus(); 
+        },
+        saveFormSupplier() {
+            var app = this;
+            var newsuplier = app.tambahSuplier;
+            axios.post(app.url_suplier, newsuplier)
+            .then(function (resp) {
+                app.message = 'Menambah Suplier '+ app.tambahSuplier.nama_suplier;
+                app.alert(app.message);
+                app.tambahSuplier.nama_suplier = '';
+                app.tambahSuplier.alamat = '';
+                app.tambahSuplier.no_telp = '';
+                app.tambahSuplier.contact_person = '';
+                app.errors = '';
+                app.dataSuplier();
+                $("#modal_tambah_suplier").hide();
+            })
+            .catch(function (resp) {
+                app.success = false;
+                app.errors = resp.response.data.errors;
+            });
+        },
+        saveFormKas() {
+            var app = this;
+            var newkas = app.tambahKas;
+            axios.post(app.url_tambah_kas, newkas)
+            .then(function (resp) {
+                app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
+                app.alert(app.message);
+                app.tambahKas.kode_kas = ''
+                app.tambahKas.nama_kas = ''
+                app.tambahKas.status_kas = 0
+                app.tambahKas.default_kas = 0
+                app.errors = '';
+                app.$store.dispatch('LOAD_KAS_LIST') 
+                $("#modal_tambah_kas").hide();
+
+            })
+            .catch(function (resp) {
+                app.success = false;
+                app.errors = resp.response.data.errors;
+            });
+        },
+        defaultKas() {
+            var app = this;
+            var toogle = app.tambahKas.default_kas;
+
+            if (toogle == true) {
+                app = this;
+                app.$swal({
+                    title: "Konfirmasi",
+                    text: "Apakah Anda Yakin Ingin Mengubah Kas Utama ?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((confirm) => {
+                    if (confirm) {
+                        toogle.prop('checked', true);
+                    } else {
+                        toogle.prop('checked', false);
+                    }
+                });
+            }  
+        },
+        alertTbs(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "warning",
+            });
+        },
+        alert(pesan) {
+            this.$swal({
+                title: "Berhasil ",
+                text: pesan,
+                icon: "success",
+                buttons: false,
+                timer: 1000,
+            });
+        },//alert untuk berhasil proses crud
+        deleteEntry(id, index,nama_produk,subtotal_lama) {
+
+            var app = this;
+            app.$swal({
+                text: "Anda Yakin Ingin Menghapus Produk "+nama_produk+ " ?",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    this.prosesDelete(id,nama_produk,subtotal_lama);
+
+                } else {
+
+                    app.$swal.close();
+
+                }
+            });
 
             if (satuan_tbs == satuan_produk[0]) {
                 $("#modalEditSatuan").hide();
             } else {
 
-    var app = this;
-    app.loading = true;
-    axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
-    .then(function (resp) {
-        app.getResults();
+                var app = this;
+                app.loading = true;
+                axios.delete(app.url+'/hapus-tbs-pembelian/'+id)
+                .then(function (resp) {
+                    app.getResults();
 
-        var subtotal = parseFloat(app.inputPembayaranPembelian.subtotal) - parseFloat(resp.data.subtotal)
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal
-        app.hitungPotonganPersen()
-        app.alert("Menghapus Produk "+nama_produk);
-        app.loading = false;
-        app.inputTbsPembelian.id_tbs = ''
-    })
-    .catch(function (resp) {
+                    var subtotal = parseFloat(app.inputPembayaranPembelian.subtotal) - parseFloat(resp.data.subtotal)
+                    app.inputPembayaranPembelian.subtotal = subtotal                       
+                    app.inputPembayaranPembelian.total_akhir  = subtotal
+                    app.hitungPotonganPersen()
+                    app.alert("Menghapus Produk "+nama_produk);
+                    app.loading = false;
+                    app.inputTbsPembelian.id_tbs = ''
+                })
+                .catch(function (resp) {
 
-        app.loading = false;
-        alert("Tidak dapat Menghapus Produk "+nama_produk);
-    });
-},//END fungsi prosesDelete
-pilihProduk() {
-    if (this.inputTbsPembelian.produk != '') {
-        var app = this;
-        var produk = app.inputTbsPembelian.produk.split("|");
-        var id_produk = produk[0]; 
-        var nama_produk = produk[1];
-        var harga_produk = produk[2]; 
+                    app.loading = false;
+                    alert("Tidak dapat Menghapus Produk "+nama_produk);
+                });
+            }
+        },//END fungsi prosesDelete
+        pilihProduk() {
+            if (this.inputTbsPembelian.produk != '') {
+                var app = this;
+                var produk = app.inputTbsPembelian.produk.split("|");
+                var id_produk = produk[0]; 
+                var nama_produk = produk[1];
+                var harga_produk = produk[2]; 
 
-        this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
-        this.getSatuan(id_produk);
-    }
-},//END FUNGSI pilihProduk
-inputJumlahProduk(id_produk,nama_produk,harga_produk){
-    var app = this
-    app.inputTbsPembelian.id_produk = id_produk
-    app.inputTbsPembelian.nama_produk = nama_produk  
-    var harga_tbs = $(".harga-"+id_produk).attr("data-harga");
+                this.inputJumlahProduk(id_produk,nama_produk,harga_produk);
+                this.getSatuan(id_produk);
+            }
+        },//END FUNGSI pilihProduk
+        inputJumlahProduk(id_produk,nama_produk,harga_produk){
+            var app = this
+            app.inputTbsPembelian.id_produk = id_produk
+            app.inputTbsPembelian.nama_produk = nama_produk  
+            var harga_tbs = $(".harga-"+id_produk).attr("data-harga");
 
-    if (typeof harga_tbs === 'undefined'){
-        app.inputTbsPembelian.harga_produk = harga_produk;
-    }else {
-        app.inputTbsPembelian.harga_produk = harga_tbs;
-    }
-    $("#modalJumlahProduk").show();
-    app.$refs.jumlah_produk.focus();
-},
-submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
-    var app = this
-    var produk = app.inputTbsPembelian.produk.split("|");
-    var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
-
-    if (typeof harga_tbs === 'undefined'){
-var harga = produk[2]; // harga produk sebelum di edit
-}else {
-var harga = harga_tbs; // harga produk sebelum di edit
-}
-
-
-if (jumlah_produk == "" || jumlah_produk == 0) {
-
-    app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
-    .then((value) => {
-        app.$refs.jumlah_produk.focus() 
-    })
-
-}else if (harga_produk == "" || harga_produk == 0) {
-
-    app.$swal("Harga Produk Tidak Boleh Nol atau kosong!")
-    .then((value) => {
-        app.$refs.harga_produk.focus() 
-    })
-
-}else if (harga != harga_produk) {
-    app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
-}else{
-    var status_harga = 0;
-    app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga)
-}
-
-},//END PROSES TAMBAH PRODUK TBS
-konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
-    let app = this
-    app.$swal({
-        text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
-        closeOnEsc: true,
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
+            if (typeof harga_tbs === 'undefined'){
+                app.inputTbsPembelian.harga_produk = harga_produk;
+            }else {
+                app.inputTbsPembelian.harga_produk = harga_tbs;
+            }
+            $("#modalJumlahProduk").show();
+            app.$refs.jumlah_produk.focus();
         },
-    }).then((value) => {
-        if (value) {
-var status_harga = 1; // jika master produk, juga diubah
-app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
-} else {
-var status_harga = 0; // jika master produk, tidak diubah
-app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
-}
-});
-},
-prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga){
+        submitJumlahProduk(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+            var app = this
+            var produk = app.inputTbsPembelian.produk.split("|");
+            var harga_tbs = $(".harga-"+produk[0]).attr("data-harga")
 
-    var app = this;
-    var satuan = satuan_produk.split("|");
-    app.loading = true;
-    axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
-    .then(function (resp) {
-        $("#modalJumlahProduk").hide();
-        app.alert("Menambahkan Produk "+titleCase(nama_produk));
-        app.loading = false;
-        app.getResults();
-
-        if (resp.data.status == 1) {
-            var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
-        }else{      
-            var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+            if (typeof harga_tbs === 'undefined'){
+        var harga = produk[2]; // harga produk sebelum di edit
+        }else {
+        var harga = harga_tbs; // harga produk sebelum di edit
         }
 
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal
-        app.hitungPotonganPersen();
-        app.inputTbsPembelian.id_produk = ''
-        app.inputTbsPembelian.nama_produk = ''
-        app.inputTbsPembelian.harga_produk = ''
-        app.inputTbsPembelian.jumlah_produk = ''
-        app.inputTbsPembelian.produk = ''
 
-    })
-    .catch(function (resp) {
-        app.loading = false;
-        alert("Tbs Pembelian tidak bisa ditambahkan");
-    });
+        if (jumlah_produk == "" || jumlah_produk == 0) {
 
-},
-pilihSuplierOrder() {
-    if (this.inputTbsPembelian.suplier_order != '') {
-        var app = this;
-        var dataOrder = app.inputTbsPembelian.suplier_order.split("|");
-        var id_order = dataOrder[0]; 
-        var suplier_id = dataOrder[1];
-        var faktur_order = dataOrder[2]; 
-        var suplier_order = dataOrder[3]; 
-        var keterangan_order = dataOrder[4]; 
+            app.$swal("Jumlah Produk Tidak Boleh Nol atau kosong!")
+            .then((value) => {
+                app.$refs.jumlah_produk.focus() 
+            })
 
-        app.inputPembayaranPembelian.suplier = suplier_id;
-        app.inputPembayaranPembelian.keterangan = keterangan_order;
+        }else if (harga_produk == "" || harga_produk == 0) {
 
-        this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order);
-    }
-},
-getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order){
+            app.$swal("Harga Produk Tidak Boleh Nol atau kosong!")
+            .then((value) => {
+                app.$refs.harga_produk.focus() 
+            })
 
-    var app = this;
-    app.loading = true;
+        }else if (harga != harga_produk) {
+            app.konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk)
+        }else{
+            var status_harga = 0;
+            app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga)
+        }
 
-    axios.get(app.url+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
-    .then(function (resp) {
-        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-        app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
-        app.loading = false;
-        app.getResults();        
+        },//END PROSES TAMBAH PRODUK TBS
+        konfirmasiPerubahanHarga(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk){
+            let app = this
+            app.$swal({
+                text: "Anda Yakin Ingin Merubah Harga Beli Produk "+titleCase(nama_produk)+ " ?",
+                closeOnEsc: true,
+                buttons: {
+                    cancel: true,
+                    confirm: "OK"                   
+                },
+            }).then((value) => {
+                if (value) {
+        var status_harga = 1; // jika master produk, juga diubah
+        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+        } else {
+        var status_harga = 0; // jika master produk, tidak diubah
+        app.prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga);
+        }
+        });
+        },
+        prosesTambahProdukTbs(id_produk,jumlah_produk,harga_produk,nama_produk,satuan_produk,status_harga){
 
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal
-
-        app.inputTbsPembelian.suplier_order = '';
-    })
-    .catch(function (resp) {
-        console.log(resp)
-        app.loading = false;
-        alert("Tbs Pembelian tidak bisa ditambahkan");
-    });
-
-},
-pilihSuplierPenerimaan() {
-    if (this.inputTbsPembelian.suplier_penerimaan != '') {
-        var app = this;
-        var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
-        var id_penerimaan = dataPenerimaan[0]; 
-        var suplier_id = dataPenerimaan[1];
-        var faktur_penerimaan = dataPenerimaan[2]; 
-        var suplier_penerimaan = dataPenerimaan[3]; 
-        var keterangan_penerimaan = dataPenerimaan[4]; 
-
-        app.inputPembayaranPembelian.suplier = suplier_id;
-        app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
-
-        this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan);
-    }
-},
-getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan){
-
-    var app = this;
-    app.loading = true;
-
-    axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
-    .then(function (resp) {
-        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-        app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
-        app.loading = false;
-        app.getResults();
-
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal
-        app.inputTbsPembelian.suplier_penerimaan = '';
-    })
-    .catch(function (resp) {
-        console.log(resp)
-        app.loading = false;
-        alert("Tbs Pembelian tidak bisa ditambahkan");
-    });
-
-},
-editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
-    var app = this;   
-    swal({ 
-        title: titleCase(nama_produk), 
-        input: 'number', 
-        inputPlaceholder : 'Jumlah Produk',         
-        html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
-        animation: false, 
-        showCloseButton: true, 
-        showCancelButton: true, 
-        focusConfirm: true, 
-        confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-        confirmButtonAriaLabel: 'Thumbs up, great!', 
-        cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-        closeOnConfirm: true, 
-        cancelButtonAriaLabel: 'Thumbs down', 
-        inputAttributes: { 
-            'name': 'edit_qty_produk', 
-        }, 
-        inputValidator : function (value) { 
-            return new Promise(function (resolve, reject) { 
-                if (value) { 
-                    resolve(); 
-                }  
-                else { 
-                    reject('Jumlah Harus Di Isi!'); 
-                } 
-            }) 
-        } 
-    }).then(function (jumlah_produk) { 
-        if (jumlah_produk != "0") { 
+            var app = this;
+            var satuan = satuan_produk.split("|");
             app.loading = true;
-            axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+            axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
             .then(function (resp) {
-                app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+                $("#modalJumlahProduk").hide();
+                app.alert("Menambahkan Produk "+titleCase(nama_produk));
                 app.loading = false;
-                app.getResults();      
-                var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
+                app.getResults();
+
+                if (resp.data.status == 1) {
+                    var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
+                }else{      
+                    var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+                }
+
                 app.inputPembayaranPembelian.subtotal = subtotal                       
                 app.inputPembayaranPembelian.total_akhir  = subtotal
                 app.hitungPotonganPersen();
+                app.inputTbsPembelian.id_produk = ''
+                app.inputTbsPembelian.nama_produk = ''
+                app.inputTbsPembelian.harga_produk = ''
+                app.inputTbsPembelian.jumlah_produk = ''
+                app.inputTbsPembelian.produk = ''
+
             })
             .catch(function (resp) {
                 app.loading = false;
-                alert("Jumlah Produk tidak bisa diedit");
+                alert("Tbs Pembelian tidak bisa ditambahkan");
             });
-        } 
-        else { 
-            swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
-            return false; 
-        } 
-    }); 
 
-},//END editEntryJumlah
-editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
-    var app = this;
-    app.inputTbsPembelian.nama_produk = nama_produk;
-    app.inputTbsPembelian.id_tbs = id;
-    app.inputTbsPembelian.subtotal = subtotal_lama;
-    app.getSatuan(id_produk);
-    $("#modalEditSatuan").show();
-},
-subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
+        },
+        pilihSuplierOrder() {
+            if (this.inputTbsPembelian.suplier_order != '') {
+                var app = this;
+                var dataOrder = app.inputTbsPembelian.suplier_order.split("|");
+                var id_order = dataOrder[0]; 
+                var suplier_id = dataOrder[1];
+                var faktur_order = dataOrder[2]; 
+                var suplier_order = dataOrder[3]; 
+                var keterangan_order = dataOrder[4]; 
 
-    var app = this;
-    app.inputTbsPembelian.produk = id_produk;
-    var newSatuan = app.inputTbsPembelian;
-    var satuan_produk = app.inputTbsPembelian.satuan_produk.split("|");
-    var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+                app.inputPembayaranPembelian.suplier = suplier_id;
+                app.inputPembayaranPembelian.keterangan = keterangan_order;
 
-    if (satuan_tbs == satuan_produk[0]) {
-        $("#modalEditSatuan").hide();
-    }else{
-
-        axios.post(app.url+'/edit-satuan-tbs-pembelian', newSatuan)
-        .then(function (resp) {
-
-            var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
-
-            function cekTbs(tbs) { 
-                return tbs.id_tbs_pembelian === id_tbs
+                this.getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order);
             }
+        },
+        getPembelianOrder(id_order,suplier_id,faktur_order,suplier_order){
 
-
-            app.getResults();
-
-            app.inputPembayaranPembelian.subtotal = subtotal.toFixed(2)
-            app.inputPembayaranPembelian.total_akhir = subtotal.toFixed(2)
-            app.hitungPotonganPersen()
-            app.inputTbsPembelian.id_tbs = ''
-            app.openSelectizeProduk() 
-            $("#modalEditSatuan").hide();
-
-        })
-        .catch(function (resp) {
-            console.log(resp);                  
-            app.loading = false;
-            alert("Tidak Dapat Mengubah Satuan");
-        });
-    }
-},
-editEntryHarga(id, index,nama_produk,subtotal_lama) {    
-    var app = this;   
-    swal({ 
-        title: titleCase(nama_produk), 
-        input: 'number', 
-        inputPlaceholder : 'Harga Produk',         
-        html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
-        animation: false, 
-        showCloseButton: true, 
-        showCancelButton: true, 
-        focusConfirm: true, 
-        confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-        confirmButtonAriaLabel: 'Thumbs up, great!', 
-        cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-        closeOnConfirm: true, 
-        cancelButtonAriaLabel: 'Thumbs down', 
-        inputAttributes: { 
-            'name': 'edit_harga_produk', 
-        }, 
-        inputValidator : function (value) { 
-            return new Promise(function (resolve, reject) { 
-                if (value) { 
-                    resolve(); 
-                }  
-                else { 
-                    reject('Harga Harus Di Isi!'); 
-                } 
-            }) 
-        } 
-    }).then(function (harga_produk) { 
-        if (harga_produk != "0") { 
+            var app = this;
             app.loading = true;
-            axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+
+            axios.get(app.url+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
             .then(function (resp) {
-                app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+                var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+                app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
+                app.loading = false;
+                app.getResults();        
+
+                app.inputPembayaranPembelian.subtotal = subtotal                       
+                app.inputPembayaranPembelian.total_akhir  = subtotal
+
+                app.inputTbsPembelian.suplier_order = '';
+            })
+            .catch(function (resp) {
+                console.log(resp)
+                app.loading = false;
+                alert("Tbs Pembelian tidak bisa ditambahkan");
+            });
+
+        },
+        pilihSuplierPenerimaan() {
+            if (this.inputTbsPembelian.suplier_penerimaan != '') {
+                var app = this;
+                var dataPenerimaan = app.inputTbsPembelian.suplier_penerimaan.split("|");
+                var id_penerimaan = dataPenerimaan[0]; 
+                var suplier_id = dataPenerimaan[1];
+                var faktur_penerimaan = dataPenerimaan[2]; 
+                var suplier_penerimaan = dataPenerimaan[3]; 
+                var keterangan_penerimaan = dataPenerimaan[4]; 
+
+                app.inputPembayaranPembelian.suplier = suplier_id;
+                app.inputPembayaranPembelian.keterangan = keterangan_penerimaan;
+
+                this.getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan);
+            }
+        },
+        getPembelianPenerimaan(id_penerimaan,suplier_id,faktur_penerimaan,suplier_penerimaan){
+
+            var app = this;
+            app.loading = true;
+
+            axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
+            .then(function (resp) {
+                var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
+                app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
+                app.loading = false;
+                app.getResults();
+
+                app.inputPembayaranPembelian.subtotal = subtotal                       
+                app.inputPembayaranPembelian.total_akhir  = subtotal
+                app.inputTbsPembelian.suplier_penerimaan = '';
+            })
+            .catch(function (resp) {
+                console.log(resp)
+                app.loading = false;
+                alert("Tbs Pembelian tidak bisa ditambahkan");
+            });
+
+        },
+        editEntryJumlah(id, index,nama_produk,subtotal_lama) {    
+            var app = this;   
+            swal({ 
+                title: titleCase(nama_produk), 
+                input: 'number', 
+                inputPlaceholder : 'Jumlah Produk',         
+                html:'Berapa Jumlah Produk Yang Akan Dimasukkan ?', 
+                animation: false, 
+                showCloseButton: true, 
+                showCancelButton: true, 
+                focusConfirm: true, 
+                confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                confirmButtonAriaLabel: 'Thumbs up, great!', 
+                cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                closeOnConfirm: true, 
+                cancelButtonAriaLabel: 'Thumbs down', 
+                inputAttributes: { 
+                    'name': 'edit_qty_produk', 
+                }, 
+                inputValidator : function (value) { 
+                    return new Promise(function (resolve, reject) { 
+                        if (value) { 
+                            resolve(); 
+                        }  
+                        else { 
+                            reject('Jumlah Harus Di Isi!'); 
+                        } 
+                    }) 
+                } 
+            }).then(function (jumlah_produk) { 
+                if (jumlah_produk != "0") { 
+                    app.loading = true;
+                    axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
+                    .then(function (resp) {
+                        app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+                        app.loading = false;
+                        app.getResults();      
+                        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
+                        app.inputPembayaranPembelian.subtotal = subtotal                       
+                        app.inputPembayaranPembelian.total_akhir  = subtotal
+                        app.hitungPotonganPersen();
+                    })
+                    .catch(function (resp) {
+                        app.loading = false;
+                        alert("Jumlah Produk tidak bisa diedit");
+                    });
+                } 
+                else { 
+                    swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
+                    return false; 
+                } 
+            }); 
+
+        },//END editEntryJumlah
+        editSatuanEntry(id, index,nama_produk,subtotal_lama, id_produk) {
+            var app = this;
+            app.inputTbsPembelian.nama_produk = nama_produk;
+            app.inputTbsPembelian.id_tbs = id;
+            app.inputTbsPembelian.subtotal = subtotal_lama;
+            app.getSatuan(id_produk);
+            $("#modalEditSatuan").show();
+        },
+        subtmitEditSatuan(id_produk, id_tbs, subtotal_lama){
+
+            var app = this;
+            app.inputTbsPembelian.produk = id_produk;
+            var newSatuan = app.inputTbsPembelian;
+            var satuan_produk = app.inputTbsPembelian.satuan_produk.split("|");
+            var satuan_tbs = $(".satuan-"+id_produk).attr("data-satuan");
+
+            if (satuan_tbs == satuan_produk[0]) {
+                $("#modalEditSatuan").hide();
+            }else{
+
+                axios.post(app.url+'/edit-satuan-tbs-pembelian', newSatuan)
+                .then(function (resp) {
+
+                    var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama) + parseInt(resp.data.subtotal))
+
+                    function cekTbs(tbs) { 
+                        return tbs.id_tbs_pembelian === id_tbs
+                    }
+
+
+                    app.getResults();
+
+                    app.inputPembayaranPembelian.subtotal = subtotal.toFixed(2)
+                    app.inputPembayaranPembelian.total_akhir = subtotal.toFixed(2)
+                    app.hitungPotonganPersen()
+                    app.inputTbsPembelian.id_tbs = ''
+                    app.openSelectizeProduk() 
+                    $("#modalEditSatuan").hide();
+
+                })
+                .catch(function (resp) {
+                    console.log(resp);                  
+                    app.loading = false;
+                    alert("Tidak Dapat Mengubah Satuan");
+                });
+            }
+        },
+        editEntryHarga(id, index,nama_produk,subtotal_lama) {    
+            var app = this;   
+            swal({ 
+                title: titleCase(nama_produk), 
+                input: 'number', 
+                inputPlaceholder : 'Harga Produk',         
+                html:'Berapa Harga Produk Yang Akan Dimasukkan ?', 
+                animation: false, 
+                showCloseButton: true, 
+                showCancelButton: true, 
+                focusConfirm: true, 
+                confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                confirmButtonAriaLabel: 'Thumbs up, great!', 
+                cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                closeOnConfirm: true, 
+                cancelButtonAriaLabel: 'Thumbs down', 
+                inputAttributes: { 
+                    'name': 'edit_harga_produk', 
+                }, 
+                inputValidator : function (value) { 
+                    return new Promise(function (resolve, reject) { 
+                        if (value) { 
+                            resolve(); 
+                        }  
+                        else { 
+                            reject('Harga Harus Di Isi!'); 
+                        } 
+                    }) 
+                } 
+            }).then(function (harga_produk) { 
+                if (harga_produk != "0") { 
+                    app.loading = true;
+                    axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
+                    .then(function (resp) {
+                        app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+                        app.loading = false;
+                        app.getResults();
+                        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+                        app.inputPembayaranPembelian.subtotal = subtotal                       
+                        app.inputPembayaranPembelian.total_akhir  = subtotal 
+                        app.hitungPotonganPersen();
+
+                    })
+                    .catch(function (resp) {
+                        app.loading = false;
+                        alert("Harga Produk tidak bisa diedit");
+                    });
+                } 
+                else { 
+                    swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
+                    return false; 
+                } 
+            }); 
+
+        },//END editEntryHarga
+        editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {    
+            var app = this;   
+            var subtotal = parseFloat(jumlah) * parseFloat(harga);
+            swal({ 
+                title: titleCase(nama_produk), 
+                input: 'text', 
+                inputPlaceholder : 'Potongan Produk',         
+                html:'<i>Format : 10 (nominal) || 10% (persen)</i>', 
+                animation: false, 
+                showCloseButton: true, 
+                showCancelButton: true, 
+                focusConfirm: true, 
+                confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                confirmButtonAriaLabel: 'Thumbs up, great!', 
+                cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                closeOnConfirm: true, 
+                cancelButtonAriaLabel: 'Thumbs down', 
+                inputAttributes: { 
+                    'name': 'edit_potongan_produk', 
+                }, 
+                inputValidator : function (value) { 
+                    return new Promise(function (resolve, reject) { 
+                        if (value) { 
+                            resolve(); 
+                        }  
+                        else { 
+                            reject('Potongan Harus Di Isi!'); 
+                        } 
+                    }) 
+                } 
+            }).then(function (potongan) { 
+                var pos = potongan.search("%"); 
+                if (pos > 0)  
+                {   
+                    var potongan_produk = potongan; 
+                    potongan_produk = potongan_produk.replace("%","");       
+                    if (potongan_produk > 100) { 
+                        swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
+                    } 
+                    else if (potongan != "0") { 
+                        axios.get(app.url+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+                        .then(function (resp) {
+                            if (resp.data == 1) {
+                                swal({
+                                    title: "Peringatan",
+                                    text:"Potongan Tidak Boleh Lebih Dari 100%!",
+                                });
+                            }
+                            else{
+                                app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
+                            }
+                        });
+                    } 
+                    else { 
+                        swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+                    } 
+
+                }else{ 
+                    if (subtotal < potongan) { 
+                        swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error'); 
+                    } 
+                    else if (potongan != "0") { 
+                        app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
+                    } 
+                    else { 
+                        swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
+                    } 
+                } 
+            }); 
+
+        },//END SWAL EDIT POTONGAN TBS
+        submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
+            var app = this;
+            app.loading = true;
+            axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
+            .then(function (resp) {
+                app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
                 app.loading = false;
                 app.getResults();
                 var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
                 app.inputPembayaranPembelian.subtotal = subtotal                       
                 app.inputPembayaranPembelian.total_akhir  = subtotal 
-                app.hitungPotonganPersen();
+                app.hitungPotonganPersen()
 
             })
             .catch(function (resp) {
                 app.loading = false;
-                alert("Harga Produk tidak bisa diedit");
+                alert("Potongan Produk tidak bisa diedit");
             });
-        } 
-        else { 
-            swal('Oops...', 'Harga Tidak Boleh 0 !', 'error'); 
-            return false; 
-        } 
-    }); 
+        },//END PROSES UPDATE POTONGAN TBS 
 
-},//END editEntryHarga
-editEntryPotongan(id, index,nama_produk,jumlah,harga,subtotal_lama) {    
-    var app = this;   
-    var subtotal = parseFloat(jumlah) * parseFloat(harga);
-    swal({ 
-        title: titleCase(nama_produk), 
-        input: 'text', 
-        inputPlaceholder : 'Potongan Produk',         
-        html:'<i>Format : 10 (nominal) || 10% (persen)</i>', 
-        animation: false, 
-        showCloseButton: true, 
-        showCancelButton: true, 
-        focusConfirm: true, 
-        confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-        confirmButtonAriaLabel: 'Thumbs up, great!', 
-        cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-        closeOnConfirm: true, 
-        cancelButtonAriaLabel: 'Thumbs down', 
-        inputAttributes: { 
-            'name': 'edit_potongan_produk', 
-        }, 
-        inputValidator : function (value) { 
-            return new Promise(function (resolve, reject) { 
-                if (value) { 
-                    resolve(); 
-                }  
-                else { 
-                    reject('Potongan Harus Di Isi!'); 
+        editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
+            var app = this;   
+            var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+
+            if (ppn == '') { 
+                var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+ 
+                '<option value="Include" >Include</option>'+ 
+                '<option value="Exclude" >Exclude</option>'+ 
+                '</select></div>'; 
+            }else { 
+                var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
+                '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
+                '</select></div>'; 
+            } 
+
+            swal({ 
+                title: titleCase(nama_produk), 
+                html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
+                '<div class="row">'+ 
+                '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
+                '<div class="col-sm-6 col-xs-6">'+ 
+                '<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+ 
+                '</div>', 
+                animation: false, 
+                showCloseButton: true, 
+                showCancelButton: true, 
+                confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
+                confirmButtonAriaLabel: 'Thumbs up, great!', 
+                cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
+                cancelButtonAriaLabel: 'Thumbs down', 
+                preConfirm: function () { 
+                    return new Promise(function (resolve) { 
+                        resolve([ 
+                            $('#tax_swal').val(), 
+                            $('#ppn_swal').val() 
+                            ]) 
+                    }) 
                 } 
-            }) 
-        } 
-    }).then(function (potongan) { 
-        var pos = potongan.search("%"); 
-        if (pos > 0)  
-        {   
-            var potongan_produk = potongan; 
-            potongan_produk = potongan_produk.replace("%","");       
-            if (potongan_produk > 100) { 
-                swal('Oops...', 'Potongan Tidak Boleh Lebih Dari 100%!', 'error'); 
-            } 
-            else if (potongan != "0") { 
-                axios.get(app.url+'/cek-persen-potongan-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
-                .then(function (resp) {
-                    if (resp.data == 1) {
-                        swal({
-                            title: "Peringatan",
-                            text:"Potongan Tidak Boleh Lebih Dari 100%!",
-                        });
-                    }
-                    else{
-                        app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
-                    }
-                });
-            } 
-            else { 
-                swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
-            } 
+            }).then(function (result) {   
+                if (result[0] == '' || result[0] == 0) { 
 
-        }else{ 
-            if (subtotal < potongan) { 
-                swal('Oops...', 'Potongan Tidak Boleh Melebihi Subtotal!', 'error'); 
-            } 
-            else if (potongan != "0") { 
-                app.submitEditPotongan(potongan,id,nama_produk,subtotal_lama);
-            } 
-            else { 
-                swal('Oops...', 'Potongan Tidak Boleh 0 !', 'error'); 
-            } 
-        } 
-    }); 
+                    swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
+                    return false; 
+                }   
+                else if (result[1] == '') { 
 
-},//END SWAL EDIT POTONGAN TBS
-submitEditPotongan(potongan,id,nama_produk,subtotal_lama){
-    var app = this;
-    app.loading = true;
-    axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
-    .then(function (resp) {
-        app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
-        app.loading = false;
-        app.getResults();
-        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal 
-        app.hitungPotonganPersen()
-
-    })
-    .catch(function (resp) {
-        app.loading = false;
-        alert("Potongan Produk tidak bisa diedit");
-    });
-},//END PROSES UPDATE POTONGAN TBS 
-
-editEntryTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
-    var app = this;   
-    var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
-
-    if (ppn == '') { 
-        var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+ 
-        '<option value="Include" >Include</option>'+ 
-        '<option value="Exclude" >Exclude</option>'+ 
-        '</select></div>'; 
-    }else { 
-        var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-        '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
-        '</select></div>'; 
-    } 
-
-    swal({ 
-        title: titleCase(nama_produk), 
-        html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
-        '<div class="row">'+ 
-        '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
-        '<div class="col-sm-6 col-xs-6">'+ 
-        '<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+ 
-        '</div>', 
-        animation: false, 
-        showCloseButton: true, 
-        showCancelButton: true, 
-        confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-        confirmButtonAriaLabel: 'Thumbs up, great!', 
-        cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-        cancelButtonAriaLabel: 'Thumbs down', 
-        preConfirm: function () { 
-            return new Promise(function (resolve) { 
-                resolve([ 
-                    $('#tax_swal').val(), 
-                    $('#ppn_swal').val() 
-                    ]) 
-            }) 
-        } 
-    }).then(function (result) {   
-        if (result[0] == '' || result[0] == 0) { 
-
-            swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
-            return false; 
-        }   
-        else if (result[1] == '') { 
-
-            swal('Oops...', 'PPN Belum Di Isi', 'error'); 
-            return false; 
-        }else{ 
-
-            var pajak = result[0]; 
-            var pos = pajak.search("%"); 
-
-            if (pos > 0) { 
-                pajak = pajak.replace("%",""); 
-                if (pajak > 100) { 
-
-                    swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+                    swal('Oops...', 'PPN Belum Di Isi', 'error'); 
                     return false; 
                 }else{ 
-                    axios.get(app.url+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
-                    .then(function (resp) {
-                        if (resp.data == 1) {
-                            swal({
-                                title: "Peringatan",
-                                text:"Pajak Tidak Boleh Lebih Dari 100%!",
+
+                    var pajak = result[0]; 
+                    var pos = pajak.search("%"); 
+
+                    if (pos > 0) { 
+                        pajak = pajak.replace("%",""); 
+                        if (pajak > 100) { 
+
+                            swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
+                            return false; 
+                        }else{ 
+                            axios.get(app.url+'/cek-persen-tax-pembelian?tax_edit_produk='+result[0]+'&id_tax='+id+'&ppn_produk='+result[1])
+                            .then(function (resp) {
+                                if (resp.data == 1) {
+                                    swal({
+                                        title: "Peringatan",
+                                        text:"Pajak Tidak Boleh Lebih Dari 100%!",
+                                    });
+                                }
+                                else{
+                                    var pajak = result[0];
+                                    var ppn_edit = result[1];
+                                    app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+                                }
                             });
-                        }
-                        else{
+                        } 
+                    }else{ 
+
+                        if (subtotal < result[0]) { 
+
+                            swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
+                            return false; 
+                        }else{ 
                             var pajak = result[0];
                             var ppn_edit = result[1];
                             app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
-                        }
-                    });
+                        } 
+
+                    } 
                 } 
-            }else{ 
-
-                if (subtotal < result[0]) { 
-
-                    swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
-                    return false; 
-                }else{ 
-                    var pajak = result[0];
-                    var ppn_edit = result[1];
-                    app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
-                } 
-
-            } 
-        } 
-    }); 
-},//END SWAL EDIT TAX TBS
-submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
-    var app = this;
-    app.loading = true;
-    axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
-    .then(function (resp) {
-        app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
-        app.loading = false;
-        app.getResults();  
-
-        var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-        app.inputPembayaranPembelian.subtotal = subtotal                       
-        app.inputPembayaranPembelian.total_akhir  = subtotal 
-        app.hitungPotonganPersen()
-
-
-    })
-    .catch(function (resp) {
-        app.loading = false;
-        alert("Pajak Produk tidak bisa diedit");
-    });
-},//END METHOD EDIT TAX TBS
-batalPembelian(){
-    var app = this;
-    app.$swal({
-        text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-
+            }); 
+        },//END SWAL EDIT TAX TBS
+        submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
+            var app = this;
             app.loading = true;
-            axios.post(app.url+'/batal-transaksi-pembelian')
+            axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
             .then(function (resp) {
+                app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+                app.loading = false;
+                app.getResults();  
 
-                var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal)
-                app.getResults();
-                app.alert("Membatalkan Transaksi Pembelian");
-                app.inputPembayaranPembelian.suplier = ''
-                app.inputPembayaranPembelian.subtotal = 0
-                app.inputPembayaranPembelian.jatuh_tempo = ''
-                app.inputPembayaranPembelian.potongan_persen = 0
-                app.inputPembayaranPembelian.potongan_faktur = 0
-                app.inputPembayaranPembelian.total_akhir = 0
-                app.inputPembayaranPembelian.pembayaran = 0
-                app.hitungKembalian(app.inputPembayaranPembelian.pembayaran)
+                var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
+                app.inputPembayaranPembelian.subtotal = subtotal                       
+                app.inputPembayaranPembelian.total_akhir  = subtotal 
+                app.hitungPotonganPersen()
+
+
             })
             .catch(function (resp) {
-
                 app.loading = false;
-                alert("Tidak dapat Membatalkan Transaksi Pembelian");
+                alert("Pajak Produk tidak bisa diedit");
             });
+        },//END METHOD EDIT TAX TBS
+        batalPembelian(){
+            var app = this;
+            app.$swal({
+                text: "Anda Yakin Ingin Membatalkan Transaksi Pembelian Ini ?",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
 
-        } else {
+                    app.loading = true;
+                    axios.post(app.url+'/batal-transaksi-pembelian')
+                    .then(function (resp) {
 
-            app.$swal.close();
+                        var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal)
+                        app.getResults();
+                        app.alert("Membatalkan Transaksi Pembelian");
+                        app.inputPembayaranPembelian.suplier = ''
+                        app.inputPembayaranPembelian.subtotal = 0
+                        app.inputPembayaranPembelian.jatuh_tempo = ''
+                        app.inputPembayaranPembelian.potongan_persen = 0
+                        app.inputPembayaranPembelian.potongan_faktur = 0
+                        app.inputPembayaranPembelian.total_akhir = 0
+                        app.inputPembayaranPembelian.pembayaran = 0
+                        app.hitungKembalian(app.inputPembayaranPembelian.pembayaran)
+                    })
+                    .catch(function (resp) {
 
-        }
-    });
-},//END BATAL PEMBELIAN
-selesaiPembelian(){
-    var app = this;
-    if (app.inputPembayaranPembelian.suplier == '') { 
-        swal({
-            text: 'Suplier Belum Dipilih!!'
-        }).then((result) => {
-            app.openSelectizeSuplier();
-        });
-    }
-    else if (app.inputPembayaranPembelian.cara_bayar == '') { 
-        swal({
-            text: 'Cara Bayar Belum Dipilih!!'
-        }).then((result) => {
-            app.openSelectizeKas();
-        });
-    } 
-    else{ 
-        $("#modal_selesai").show();
-        this.$refs.pembayaran.$el.focus(); 
-    } 
-},//END SWAL selesaiPembelian
-btnCloseModal(){
-    $("#modal_selesai").hide(); 
-},
-closeModalX(){
-    $("#modal_selesai").hide();
-    $("#modal_tambah_suplier").hide(); 
-    $("#modal_tambah_kas").hide();  
-},
-hitungPotonganPersen(){
+                        app.loading = false;
+                        alert("Tidak dapat Membatalkan Transaksi Pembelian");
+                    });
 
-    var potonganPersen = this.inputPembayaranPembelian.potongan_persen
+                } else {
 
-    if (potonganPersen > 100) {
+                    app.$swal.close();
 
-        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
-        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
-        this.inputPembayaranPembelian.potongan_faktur = 0
-        this.inputPembayaranPembelian.potongan_persen = 0
-        this.inputPembayaranPembelian.potongan = 0
-        this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
-
-    }else{
-
-        if (potonganPersen == '') {
-            potonganPersen = 0
-        }
-
-        var potongan_nominal = parseFloat(this.inputPembayaranPembelian.subtotal) * (parseFloat(potonganPersen)) / 100; 
-        var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal,10) - parseFloat(potongan_nominal,10);
-
-        this.inputPembayaranPembelian.potongan_faktur = potongan_nominal.toFixed(2)
-        this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
-        this.inputPembayaranPembelian.potongan = potongan_nominal
-        this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
-
-
-    }
-},
-hitungHargaKonversi(){
-    var satuan = this.inputTbsPembelian.satuan_produk.split("|");
-    var produk = this.inputTbsPembelian.produk.split("|");
-    this.inputTbsPembelian.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
-
-},
-hitungPotonganFaktur(){
-
-    var potonganFaktur = this.inputPembayaranPembelian.potongan_faktur;
-
-    if (potonganFaktur == '') {
-        potonganFaktur = 0
-    }
-    var potongan_persen = (parseFloat(potonganFaktur)) / parseFloat(this.inputPembayaranPembelian.subtotal) * 100;
-    var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal) - parseFloat(potonganFaktur);
-
-    if (potongan_persen > 100) {
-        swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
-        this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
-        this.inputPembayaranPembelian.potongan_faktur = 0
-        this.inputPembayaranPembelian.potongan_persen = 0
-        this.inputPembayaranPembelian.potongan = 0
-        this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
-
-    }else{
-        this.inputPembayaranPembelian.potongan_persen = potongan_persen.toFixed(2)
-        this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
-        this.inputPembayaranPembelian.kredit = total_akhir.toFixed(2)
-        this.inputPembayaranPembelian.potongan = potonganFaktur
-        this.hitungKembalian(this.inputPembayaranPembelian.pembayaran);
-    }
-
-},
-hitungKembalian(val){
-    var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelian.total_akhir);   
-    if (kembalian >= 0) {
-
-        this.inputPembayaranPembelian.kembalian = kembalian 
-        this.inputPembayaranPembelian.kredit = 0
-        this.inputPembayaranPembelian.status_pembelian = "Tunai";
-        $("#btn-tunai-pembelian").show();
-        $("#btn-hutang-pembelian").hide();
-    }else{
-        this.inputPembayaranPembelian.kembalian = 0  
-        this.inputPembayaranPembelian.kredit = parseFloat(this.inputPembayaranPembelian.total_akhir) - parseFloat(val);
-        this.inputPembayaranPembelian.status_pembelian = "Hutang";
-        $("#btn-tunai-pembelian").hide();
-        $("#btn-hutang-pembelian").show();
-    }        
-},
-selesaiTransaksi(){
-    this.$swal({
-        text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
-        buttons: {
-            cancel: true,
-            confirm: "OK"                   
-        },
-    }).then((value) => {
-        if (!value) throw null;
-        this.saveForm(value);
-    });
-},
-saveForm(){
-    var app = this;
-    var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
-    var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
-    if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
-        swal("Oops...","Jatuh Tempo Belum Diisi!","error");
-        this.$refs.jatuh_tempo.$el.focus();
-    }else{
-        app.$router.replace('/create-pembelian');
-        app.prosesTransaksiSelesai();
-    }
-},//akhir btn bayar tunai
-prosesTransaksiSelesai(){
-    var app = this;
-    var kas = app.inputPembayaranPembelian.cara_bayar;
-    var pembayaran = app.inputPembayaranPembelian.pembayaran;
-    if (pembayaran == '') {
-        pembayaran = 0;
-    }
-    axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
-    .then(function (resp) {
-        if (resp.data.total_kas == '' || resp.data.total_kas == null) {
-            var total_kas = 0;
-        }else{
-            var total_kas = resp.data.total_kas;
-        }
-        var data_produk_pembelian = resp.data.data_produk_pembelian;
-        var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
-        if (hitung_sisa_kas >= 0) {
-            if (data_produk_pembelian == 0){
-                swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
-            }
-            else{
-                var newPembelian = app.inputPembayaranPembelian;
-                axios.post(app.url, newPembelian)
-                .then(function (resp) {
-                    app.message = 'Berhasil Menambah Pembelian';
-                    app.alert(app.message);
-                    app.$router.replace('/pembelian');
-                    window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
-                })
-                .catch(function (resp) {
-                    app.success = false;
+                }
+            });
+        },//END BATAL PEMBELIAN
+        selesaiPembelian(){
+            var app = this;
+            if (app.inputPembayaranPembelian.suplier == '') { 
+                swal({
+                    text: 'Suplier Belum Dipilih!!'
+                }).then((result) => {
+                    app.openSelectizeSuplier();
                 });
             }
-        }else{
-            swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
-        }
-    });
-},//akhir prosesTransaksiSelesai
-closeModalJumlahProduk(){  
-    $("#modalJumlahProduk").hide(); 
-    $("#modalEditSatuan").hide(); 
-    this.openSelectizeProduk();
-},
-importExcel(){
-    var app = this;
-    let newExcel = new FormData();
-    let file = document.getElementById('excel').files[0];
+            else if (app.inputPembayaranPembelian.cara_bayar == '') { 
+                swal({
+                    text: 'Cara Bayar Belum Dipilih!!'
+                }).then((result) => {
+                    app.openSelectizeKas();
+                });
+            } 
+            else{ 
+                $("#modal_selesai").show();
+                this.$refs.pembayaran.$el.focus(); 
+            } 
+        },//END SWAL selesaiPembelian
+        btnCloseModal(){
+            $("#modal_selesai").hide(); 
+        },
+        closeModalX(){
+            $("#modal_selesai").hide();
+            $("#modal_tambah_suplier").hide(); 
+            $("#modal_tambah_kas").hide();  
+        },
+        hitungPotonganPersen(){
 
-    if (file != undefined) {
-        newExcel.append('excel', file)
-    }else{
-        app.alertGagal("Silakan Pilih File Dahulu.");
-        return;
-    }
+            var potonganPersen = this.inputPembayaranPembelian.potongan_persen
 
-    $("#modal_import").hide();
-    $("#excel").val('');
-    app.loading = true;
-    axios.post(app.urlImport, newExcel).then(function (resp){
-        console.log(resp);
-        if (resp.data.pesanError !== undefined) {
-            return swal({
-                title: 'Gagal!',
-                type: 'warning',
-                html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+            if (potonganPersen > 100) {
+
+                swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
+                this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
+                this.inputPembayaranPembelian.potongan_faktur = 0
+                this.inputPembayaranPembelian.potongan_persen = 0
+                this.inputPembayaranPembelian.potongan = 0
+                this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
+
+            }else{
+
+                if (potonganPersen == '') {
+                    potonganPersen = 0
+                }
+
+                var potongan_nominal = parseFloat(this.inputPembayaranPembelian.subtotal) * (parseFloat(potonganPersen)) / 100; 
+                var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal,10) - parseFloat(potongan_nominal,10);
+
+                this.inputPembayaranPembelian.potongan_faktur = potongan_nominal.toFixed(2)
+                this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
+                this.inputPembayaranPembelian.potongan = potongan_nominal
+                this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
+
+
+            }
+        },
+        hitungHargaKonversi(){
+            var satuan = this.inputTbsPembelian.satuan_produk.split("|");
+            var produk = this.inputTbsPembelian.produk.split("|");
+            this.inputTbsPembelian.harga_produk = parseFloat(produk[2]) * ( parseFloat(satuan[3]) * parseFloat(satuan[4]) );
+
+        },
+        hitungPotonganFaktur(){
+
+            var potonganFaktur = this.inputPembayaranPembelian.potongan_faktur;
+
+            if (potonganFaktur == '') {
+                potonganFaktur = 0
+            }
+            var potongan_persen = (parseFloat(potonganFaktur)) / parseFloat(this.inputPembayaranPembelian.subtotal) * 100;
+            var total_akhir = parseFloat(this.inputPembayaranPembelian.subtotal) - parseFloat(potonganFaktur);
+
+            if (potongan_persen > 100) {
+                swal('Oops...','Potongan Tidak Bisa Lebih Dari 100%','error'); 
+                this.inputPembayaranPembelian.total_akhir = this.inputPembayaranPembelian.subtotal;
+                this.inputPembayaranPembelian.potongan_faktur = 0
+                this.inputPembayaranPembelian.potongan_persen = 0
+                this.inputPembayaranPembelian.potongan = 0
+                this.hitungKembalian(this.inputPembayaranPembelian.pembayaran)
+
+            }else{
+                this.inputPembayaranPembelian.potongan_persen = potongan_persen.toFixed(2)
+                this.inputPembayaranPembelian.total_akhir = total_akhir.toFixed(2)
+                this.inputPembayaranPembelian.kredit = total_akhir.toFixed(2)
+                this.inputPembayaranPembelian.potongan = potonganFaktur
+                this.hitungKembalian(this.inputPembayaranPembelian.pembayaran);
+            }
+
+        },
+        hitungKembalian(val){
+            var kembalian = parseFloat(val) - parseFloat(this.inputPembayaranPembelian.total_akhir);   
+            if (kembalian >= 0) {
+
+                this.inputPembayaranPembelian.kembalian = kembalian 
+                this.inputPembayaranPembelian.kredit = 0
+                this.inputPembayaranPembelian.status_pembelian = "Tunai";
+                $("#btn-tunai-pembelian").show();
+                $("#btn-hutang-pembelian").hide();
+            }else{
+                this.inputPembayaranPembelian.kembalian = 0  
+                this.inputPembayaranPembelian.kredit = parseFloat(this.inputPembayaranPembelian.total_akhir) - parseFloat(val);
+                this.inputPembayaranPembelian.status_pembelian = "Hutang";
+                $("#btn-tunai-pembelian").hide();
+                $("#btn-hutang-pembelian").show();
+            }        
+        },
+        selesaiTransaksi(){
+            this.$swal({
+                text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
+                buttons: {
+                    cancel: true,
+                    confirm: "OK"                   
+                },
+            }).then((value) => {
+                if (!value) throw null;
+                this.saveForm(value);
+            });
+        },
+        saveForm(){
+            var app = this;
+            var status_pembelian = app.inputPembayaranPembelian.status_pembelian;
+            var jatuh_tempo = app.inputPembayaranPembelian.jatuh_tempo;
+            if ((status_pembelian == 'Hutang' || status_pembelian == '') && jatuh_tempo == '') {
+                swal("Oops...","Jatuh Tempo Belum Diisi!","error");
+                this.$refs.jatuh_tempo.$el.focus();
+            }else{
+                app.$router.replace('/create-pembelian');
+                app.prosesTransaksiSelesai();
+            }
+        },//akhir btn bayar tunai
+        prosesTransaksiSelesai(){
+            var app = this;
+            var kas = app.inputPembayaranPembelian.cara_bayar;
+            var pembayaran = app.inputPembayaranPembelian.pembayaran;
+            if (pembayaran == '') {
+                pembayaran = 0;
+            }
+            axios.get(app.url+'/cek-total-kas-pembelian?kas='+kas)
+            .then(function (resp) {
+                if (resp.data.total_kas == '' || resp.data.total_kas == null) {
+                    var total_kas = 0;
+                }else{
+                    var total_kas = resp.data.total_kas;
+                }
+                var data_produk_pembelian = resp.data.data_produk_pembelian;
+                var hitung_sisa_kas = parseFloat(total_kas) - parseFloat(pembayaran);
+                if (hitung_sisa_kas >= 0) {
+                    if (data_produk_pembelian == 0){
+                        swal('Oops...','Belum Ada Produk Yang Diinputkan','error'); 
+                    }
+                    else{
+                        var newPembelian = app.inputPembayaranPembelian;
+                        axios.post(app.url, newPembelian)
+                        .then(function (resp) {
+                            app.message = 'Berhasil Menambah Pembelian';
+                            app.alert(app.message);
+                            app.$router.replace('/pembelian');
+                            window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
+                        })
+                        .catch(function (resp) {
+                            app.success = false;
+                        });
+                    }
+                }else{
+                    swal('Oops...','Kas Anda Tidak Cukup Untuk Melakukan Pembayaran','error');
+                }
+            });
+        },//akhir prosesTransaksiSelesai
+        closeModalJumlahProduk(){  
+            $("#modalJumlahProduk").hide(); 
+            $("#modalEditSatuan").hide(); 
+            this.openSelectizeProduk();
+        },
+        importExcel(){
+            var app = this;
+            let newExcel = new FormData();
+            let file = document.getElementById('excel').files[0];
+
+            if (file != undefined) {
+                newExcel.append('excel', file)
+            }else{
+                app.alertGagal("Silakan Pilih File Dahulu.");
+                return;
+            }
+
+            $("#modal_import").hide();
+            $("#excel").val('');
+            app.loading = true;
+            axios.post(app.urlImport, newExcel).then(function (resp){
+                console.log(resp);
+                if (resp.data.pesanError !== undefined) {
+                    return swal({
+                        title: 'Gagal!',
+                        type: 'warning',
+                        html: '<div style="text-align: left; font-size: 14px;">'+ resp.data.pesanError +'</div>',
+                    });
+                }
+                app.getResults();
+                app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
+            }).catch(function (resp){
+                console.log(resp);
+
+                if (resp.response.data.errors != undefined) {
+                    app.errors = resp.response.data.errors.excel[0];
+                }
+                else {
+                    app.errors = "Ukuran file terlalu besar!";
+                }
+
+                app.alertGagal(app.errors);
+            });
+        },
+        alertImport(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "success",
+                buttons: false,
+                timer: 1000
+            });
+        },
+        alertGagal(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "warning",
+                buttons: false,
+                timer: 1000
             });
         }
-        app.getResults();
-        app.alertImport(resp.data.jumlahProduk + ' Produk Berhasil Diimport.');
-    }).catch(function (resp){
-        console.log(resp);
-
-        if (resp.response.data.errors != undefined) {
-            app.errors = resp.response.data.errors.excel[0];
-        }
-        else {
-            app.errors = "Ukuran file terlalu besar!";
-        }
-
-        app.alertGagal(app.errors);
-    });
-},
-alertImport(pesan) {
-    this.$swal({
-        text: pesan,
-        icon: "success",
-        buttons: false,
-        timer: 1000
-    });
-},
-alertGagal(pesan) {
-    this.$swal({
-        text: pesan,
-        icon: "warning",
-        buttons: false,
-        timer: 1000
-    });
-}
-}
+    }
 }
 </script>
