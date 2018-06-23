@@ -3,7 +3,7 @@
         overflow-y:auto;
     }
     .pencarian {
-        color: red; 
+        color: red;
         float: right;
     }
     .form-penjualan{
@@ -56,27 +56,27 @@
     <div class="row">
         <div class="col-md-12">
 
-          <ul class="breadcrumb"> 
-            <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li> 
-            <li><router-link :to="{name: 'indexReturPembelian'}">Retur Pembelian</router-link></li> 
-            <li class="active">Tambah Retur Pembelian</li> 
-        </ul> 
+          <ul class="breadcrumb">
+            <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
+            <li><router-link :to="{name: 'indexReturPembelian'}">Retur Pembelian</router-link></li>
+            <li class="active">Tambah Retur Pembelian</li>
+        </ul>
 
         <!-- MODEL DATA PEMBELIAN -->
-        <div class="modal" id="modal_pembelian" role="dialog" data-backdrop=""> 
-            <div class="modal-dialog"> 
-                <!-- Modal content--> 
-                <div class="modal-content"> 
-                    <div class="modal-header"> 
-                        <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
-                        <h4 class="modal-title"> 
-                            <div class="alert-icon"> 
-                                <b>Pembelian Supplier {{inputTbsRetur.supplier}}</b> 
-                            </div> 
-                        </h4> 
-                    </div>  
-                    <form class="form-horizontal" > 
-                        <div class="modal-body"> 
+        <div class="modal" id="modal_pembelian" role="dialog" data-backdrop="">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button>
+                        <h4 class="modal-title">
+                            <div class="alert-icon">
+                                <b>Pembelian Supplier</b>
+                            </div>
+                        </h4>
+                    </div>
+                    <form class="form-horizontal" >
+                        <div class="modal-body">
                             <div class=" table-responsive ">
                                 <div class="pencarian">
                                     <input type="text" name="pencarian" v-model="pencarianPembelian" placeholder="Pencarian" class="form-control pencarian" autocomplete="">
@@ -99,7 +99,7 @@
                                             <td align="center">{{ data.pembelian.nama_satuan | hurufBesar }}</td>
                                             <td align="right">{{ data.pembelian.harga_beli | pemisahTitik }}</td>
                                         </tr>
-                                    </tbody>          
+                                    </tbody>
                                     <tbody class="data-tidak-ada"  v-else-if="pembelians.length == 0 && loading == false">
                                         <tr ><td colspan="6"  class="text-center">Tidak Ada Data</td></tr>
                                     </tbody>
@@ -115,24 +115,24 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
-                        </div> 
+                        </div>
                     </form>
-                </div>       
-            </div> 
-        </div> 
+                </div>
+            </div>
+        </div>
         <!-- / MODAL DATA PEMBELIAN -->
 
-        
+
 
         <!-- MODAL INSERT TBS -->
         <div class="modal" id="modalInsertTbs" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
             <div class="modal-dialog modal-medium">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button> 
+                        <button type="button" class="close"  v-on:click="closeModalInsertTbs()" v-shortkey.push="['f9']" @shortkey="closeModalInsertTbs()"> &times;</button>
                     </div>
 
-                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.jumlah_retur, inputTbsRetur.nama_produk)"> 
+                    <form class="form-horizontal" v-on:submit.prevent="submitInsertTbs(inputTbsRetur.jumlah_retur, inputTbsRetur.nama_produk)">
                         <div class="modal-body">
                             <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
 
@@ -141,7 +141,7 @@
                                     <input class="form-control" type="number" v-model="inputTbsRetur.jumlah_retur" placeholder="Isi Jumlah Retur" name="jumlah_retur" id="jumlah_retur" ref="jumlah_retur" autocomplete="off" step="0.01">
                                 </div>
                                 <div class="col-md-4">
-                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>
                                         <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
                                     </selectize-component>
                                 </div>
@@ -163,20 +163,20 @@
 
 
         <!-- MODAL SELESAI -->
-        <div class="modal" id="modal_selesai" role="dialog" data-backdrop=""> 
-            <div class="modal-dialog"> 
-                <!-- Modal content--> 
-                <div class="modal-content"> 
-                    <div class="modal-header"> 
-                        <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button> 
-                        <h4 class="modal-title"> 
-                            <div class="alert-icon"> 
-                                <b>Silahkan Lengkapi Pembayaran!</b> 
-                            </div> 
-                        </h4> 
-                    </div> 
-                    <form class="form-horizontal" > 
-                        <div class="modal-body"> 
+        <div class="modal" id="modal_selesai" role="dialog" data-backdrop="">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> &times;</button>
+                        <h4 class="modal-title">
+                            <div class="alert-icon">
+                                <b>Silahkan Lengkapi Pembayaran!</b>
+                            </div>
+                        </h4>
+                    </div>
+                    <form class="form-horizontal" >
+                        <div class="modal-body">
                             <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
                                 <div class="row">
@@ -184,7 +184,7 @@
                                         <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black; margin: 8px 0">Kas(F6)</font>
                                             <div style="margin-top: 8px">
-                                                <selectize-component style="margin: 8px 0px" v-model="returPembelian.kas" :settings="placeholder_kas" id="kas" ref='kas'>  
+                                                <selectize-component style="margin: 8px 0px" v-model="returPembelian.kas" :settings="placeholder_kas" id="kas" ref='kas'>
                                                     <option v-for="kass, index in kas" v-bind:value="kass.id">{{ kass.nama_kas }}</option>
                                                 </selectize-component>
                                             </div>
@@ -197,17 +197,17 @@
                                                 <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalKas()" type="button"> <i class="material-icons" >add</i> </button>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
 
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 1px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px; width:130px;">
-                                            <font style="color: black">Potongan(F7)</font>  
+                                            <font style="color: black">Potongan(F7)</font>
                                             <money style="text-align:right" class="form-subtotal" v-model="returPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-xs-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                            <font style="color: black">(%)(F8)</font>                                            
+                                            <font style="color: black">(%)(F8)</font>
                                             <input style="text-align:right" type="number" class="form-subtotal" value="0" v-model="returPembelian.potongan_persen" v-on:blur="potonganPersen" v-shortkey.focus="['f8']" />
                                         </div>
                                     </div>
@@ -218,20 +218,20 @@
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Potong Hutang</font>
                                             <money style="text-align:right" readonly="" class="form-penjualan" id="potong_hutang" name="potong_hutang" placeholder="Poton
-                                            g Hutang"  v-model="returPembelian.potong_hutang" v-bind="separator" ></money> 
+                                            g Hutang"  v-model="returPembelian.potong_hutang" v-bind="separator" ></money>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Total Akhir</font>
-                                            <money style="text-align:right" class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="returPembelian.total_akhir" v-bind="separator" ></money> 
-                                        </div>    
+                                            <money style="text-align:right" class="form-penjualan" readonly="" id="total_akhir" name="total_akhir" placeholder="Total Akhir"  v-model="returPembelian.total_akhir" v-bind="separator" ></money>
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group" style="margin-right: 10px; margin-left: 10px; margin-bottom: 1px; margin-top: 1px;">
                                             <font style="color: black">Pembayaran(F10)</font>
-                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="returPembelian.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran" :disabled="disable">            
-                                            </money> 
+                                            <money style="text-align:right" class="form-penjualan" v-shortkey.focus="['f10']" id="pembayaran" name="pembayaran" placeholder="Pembayaran"  v-model="returPembelian.pembayaran" v-bind="separator"  autocomplete="off" ref="pembayaran" :disabled="disable">
+                                            </money>
                                         </div>
                                     </div>
                                 </div>
@@ -242,31 +242,31 @@
                                     <button type="button" class="btn btn-default btn-sm"  v-on:click="closeModal()" v-shortkey.push="['esc']" @shortkey="closeModal()"> <font style="font-size:15px;">Tutup(Esc)</font></button>
                                 </div>
 
-                            </div> 
+                            </div>
                         </div>
                         <div class="modal-footer">
-                        </div> 
+                        </div>
                     </form>
-                </div>       
-            </div> 
-        </div> 
-        <!-- / MODAL TOMBOL SELESAI --> 
+                </div>
+            </div>
+        </div>
+        <!-- / MODAL TOMBOL SELESAI -->
 
         <!-- MODAL KAS -->
-        <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop=""> 
-            <div class="modal-dialog"> 
-                <!-- Modal content--> 
-                <div class="modal-content"> 
-                    <div class="modal-header"> 
-                        <button type="button" class="close"  v-on:click="closeModalKas()"> &times;</button> 
-                        <h4 class="modal-title"> 
-                            <div class="alert-icon"> 
-                                <b>Silahkan Isi Kas!</b> 
-                            </div> 
-                        </h4> 
-                    </div> 
+        <div class="modal" id="modal_tambah_kas" role="dialog" data-backdrop="">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"  v-on:click="closeModalKas()"> &times;</button>
+                        <h4 class="modal-title">
+                            <div class="alert-icon">
+                                <b>Silahkan Isi Kas!</b>
+                            </div>
+                        </h4>
+                    </div>
                     <div class="modal-body">
-                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal"> 
+                        <form v-on:submit.prevent="saveFormKas()" class="form-horizontal">
                             <div class="form-group">
                                 <label for="kode_kas" class="col-md-3 control-label">Kode Kas</label>
                                 <div class="col-md-9">
@@ -305,9 +305,9 @@
                             </div>
                         </form>
                     </div>
-                </div>       
-            </div> 
-        </div> 
+                </div>
+            </div>
+        </div>
         <!-- END MODAL KAS -->
 
         <div class="card" style="margin-bottom: 1px; margin-top: 1px;" >
@@ -389,7 +389,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                </tbody>          
+                                </tbody>
                                 <tbody class="data-tidak-ada"  v-else-if="tbsReturPembelians.length == 0 && loading == false">
                                     <tr ><td colspan="8"  class="text-center">Tidak Ada Data</td></tr>
                                 </tbody>
@@ -401,7 +401,7 @@
                                 <pagination :data="tbsReturPembelianDatas" v-on:pagination-change-page="getTbs" :limit="4">
                                 </pagination>
                             </div>
-                        </div>                     
+                        </div>
                     </div>
 
                     <div class="col-md-3">
@@ -420,7 +420,7 @@
                                         <label style="font-size:18px; color: #999999">
                                             <input type="checkbox" name="potong_hutang" id="display_potong_hutang" data-toogle="0" @change="displayPotongHutang"> Potong Hutang
                                         </label>
-                                    </div> 
+                                    </div>
                                 </p>
 
                                 <span id="spanFakturHutang" style="display: none">
@@ -432,8 +432,8 @@
                                 </span>
                             </div>
                             <div class="card-footer">
-                                <div class="row"> 
-                                    <div class="col-md-6 col-xs-6"> 
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6">
                                         <button type="button" class="btn btn-success" id="bayar" v-on:click="bayarRetur()" v-shortkey.push="['f2']" @shortkey="bayarRetur()"><font style="font-size:13px;">Bayar(F2)</font></button>
                                     </div>
                                     <div class="col-md-6 col-xs-6">
@@ -464,16 +464,16 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close"  v-on:click="closeModalEditSatuan()" v-shortkey.push="['f9']" @shortkey="closeModalEditSatuan()"> &times;
-                        </button> 
+                        </button>
                     </div>
 
-                    <form class="form-horizontal" v-on:submit.prevent="prosesEditSatuan(inputTbsRetur.id_produk, inputTbsRetur.id_tbs, inputTbsRetur.subtotal, inputTbsRetur.nama_produk)"> 
+                    <form class="form-horizontal" v-on:submit.prevent="prosesEditSatuan(inputTbsRetur.id_produk, inputTbsRetur.id_tbs, inputTbsRetur.subtotal, inputTbsRetur.nama_produk)">
                         <div class="modal-body">
                             <h3 class="text-center"><b>{{inputTbsRetur.nama_produk}}</b></h3>
 
                             <div class="form-group">
                                 <div class="col-md-12 col-xs-12 hurufBesar">
-                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+                                    <selectize-component v-model="inputTbsRetur.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'>
                                         <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
                                     </selectize-component>
                                 </div>
@@ -565,7 +565,7 @@
                     potong_hutang : 0,
                     faktur_hutang : '',
                     pembayaran : 0,
-                    keterangan: '',                    
+                    keterangan: '',
                 },
                 tambahKas: {
                     kode_kas : '',
@@ -575,7 +575,7 @@
                 },
             }
         },
-        computed : mapState ({    
+        computed : mapState ({
             supliers(){
                 return this.$store.state.supplier
             },
@@ -626,11 +626,11 @@
             },
         },
         methods: {
-            openSelectizeSupplier(){      
-                this.$store.dispatch('LOAD_SUPPLIER_LIST'); 
+            openSelectizeSupplier(){
+                this.$store.dispatch('LOAD_SUPPLIER_LIST');
                 this.$refs.supplier.$el.selectize.focus();
             },
-            openSelectizeKas(){      
+            openSelectizeKas(){
                 this.$refs.kas.$el.selectize.focus();
             },
             getFakturHutang() {
@@ -644,7 +644,7 @@
                 .catch( (err) => {
                     console.log(err);
                     alert("Tidak Dapat Memuat Faktur Hutang");
-                })                
+                })
             },
             getDataPembelian(page) {
                 var app = this;
@@ -695,7 +695,7 @@
                 var app = this;
 
                 if (stok_produk > 0) {
-                    app.getInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal);                    
+                    app.getInsertTbs(id_produk,nama_barang,stok_produk,satuan_id,harga_produk,subtotal);
                     app.getSatuan(id_produk);
                 }else{
                     app.alertGagal("Stok "+titleCase(nama_barang)+" Tidak Mencukupi.")
@@ -720,7 +720,7 @@
 
                     app.$swal("Jumlah Retur Tidak Boleh Nol atau kosong!")
                     .then((value) => {
-                        app.$refs.jumlah_retur.focus() 
+                        app.$refs.jumlah_retur.focus()
                     })
 
                 }else{
@@ -742,11 +742,11 @@
 
                     if (resp.data.status == 1) {
                         var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(resp.data.subtotal_lama) + parseInt(resp.data.subtotal))
-                    }else{      
+                    }else{
                         var subtotal = parseInt(app.returPembelian.subtotal) + parseInt(resp.data.subtotal)
                     }
 
-                    app.returPembelian.subtotal = subtotal                       
+                    app.returPembelian.subtotal = subtotal
                     app.returPembelian.total_akhir  = subtotal
                     app.inputTbsRetur.id_produk = ''
                     app.inputTbsRetur.nama_produk = ''
@@ -762,7 +762,7 @@
                 });
             },
             getTbs(page) {
-                var app = this; 
+                var app = this;
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
@@ -778,8 +778,8 @@
                     app.openSelectizeSupplier();
                     app.getFakturHutang();
 
-                    if (app.returPembelian.subtotal == 0) {          
-                        app.getSubtotal(); 
+                    if (app.returPembelian.subtotal == 0) {
+                        app.getSubtotal();
                     }
                 })
                 .catch( (err) => {
@@ -800,9 +800,9 @@
                 .catch(function (resp) {
                     ;
                 });
-            }, 
+            },
             getPencarianTbs(page) {
-                var app = this; 
+                var app = this;
                 if (typeof page === 'undefined') {
                     page = 1;
                 }
@@ -877,7 +877,7 @@
                     app.getTbs();
 
                     var subtotal = parseFloat(app.returPembelian.subtotal) - parseFloat(resp.data.subtotal)
-                    app.returPembelian.subtotal = subtotal                       
+                    app.returPembelian.subtotal = subtotal
                     app.returPembelian.total_akhir  = subtotal
                     app.alert("Menghapus Produk "+titleCase(nama_produk));
                     app.loading = false;
@@ -889,56 +889,56 @@
                 });
             },
             editJumlah(id, index,nama_produk,subtotal_lama) {
-                var app = this;   
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    input: 'number', 
-                    inputPlaceholder : 'Jumlah Retur',         
-                    html:'Berapa Jumlah Retur Yang Akan Dimasukkan ?', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    focusConfirm: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    closeOnConfirm: true, 
-                    cancelButtonAriaLabel: 'Thumbs down', 
-                    inputAttributes: { 
-                        'name': 'edit_qty_produk', 
-                    }, 
-                    inputValidator : function (value) { 
-                        return new Promise(function (resolve, reject) { 
-                            if (value) { 
-                                resolve(); 
-                            }  
-                            else { 
-                                reject('Jumlah Retur Harus Di Isi!'); 
-                            } 
-                        }) 
-                    } 
+                var app = this;
+                swal({
+                    title: titleCase(nama_produk),
+                    input: 'number',
+                    inputPlaceholder : 'Jumlah Retur',
+                    html:'Berapa Jumlah Retur Yang Akan Dimasukkan ?',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    closeOnConfirm: true,
+                    cancelButtonAriaLabel: 'Thumbs down',
+                    inputAttributes: {
+                        'name': 'edit_qty_produk',
+                    },
+                    inputValidator : function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (value) {
+                                resolve();
+                            }
+                            else {
+                                reject('Jumlah Retur Harus Di Isi!');
+                            }
+                        })
+                    }
                 }).then(function (jumlah_retur) {
-                    if (jumlah_retur != "0") { 
+                    if (jumlah_retur != "0") {
                         app.loading = true;
                         axios.get(app.url+'/proses-edit-jumlah-retur?jumlah_retur='+jumlah_retur+'&id_tbs='+id)
                         .then(function (resp) {
                             app.alert("Mengubah Jumlah Retur "+titleCase(nama_produk));
                             app.loading = false;
-                            app.getTbs();      
+                            app.getTbs();
                             var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
-                            app.returPembelian.subtotal = subtotal                       
+                            app.returPembelian.subtotal = subtotal
                             app.returPembelian.total_akhir  = subtotal
                         })
                         .catch(function (resp) {
                             app.loading = false;
                             alert("Jumlah Retur Tidak Bisa Diedit");
                         });
-                    } 
-                    else { 
-                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error'); 
-                        return false; 
-                    } 
-                }); 
+                    }
+                    else {
+                        swal('Oops...', 'Jumlah Tidak Boleh 0 !', 'error');
+                        return false;
+                    }
+                });
             },
             editSatuan(id, index,nama_produk,subtotal_lama, id_produk) {
                 var app = this;
@@ -968,18 +968,18 @@
 
                         app.returPembelian.subtotal = subtotal.toFixed(2)
                         app.returPembelian.total_akhir = subtotal.toFixed(2)
-                        app.openSelectizeSupplier() 
+                        app.openSelectizeSupplier()
                         $("#modalEditSatuan").hide();
                     })
                     .catch(function (resp) {
-                      ;                  
+                      ;
                       app.loading = false;
                       alert("Tidak Dapat Mengubah Satuan");
                   });
                 }
             },
             editPotongan(id, index,nama_produk,subtotal_lama) {
-                var app = this;     
+                var app = this;
                 app.$swal({
                     title: titleCase(nama_produk),
                     text : 'Format : 10 (nominal) || 10% (persen)',
@@ -992,7 +992,7 @@
                     },
                     buttons: {
                         cancel: true,
-                        confirm: "OK"                   
+                        confirm: "OK"
                     },
 
                 }).then((potongan) => {
@@ -1021,89 +1021,89 @@
                         var subtotal = (parseFloat(app.returPembelian.subtotal) - parseFloat(subtotal_lama)) + parseFloat(resp.data.subtotal)
 
                         app.returPembelian.subtotal = subtotal.toFixed(2)
-                        app.returPembelian.total_akhir = subtotal.toFixed(2)           
+                        app.returPembelian.total_akhir = subtotal.toFixed(2)
                         app.inputTbsRetur.potongan_produk = ''
                         app.inputTbsRetur.id_tbs = ''
                         app.getTbs();
                     }
                 })
-                .catch(function (resp) { 
-                    console.log(resp);    
+                .catch(function (resp) {
+                    console.log(resp);
                     alert("Tidak dapat Mengubah Potongan Produk");
                 });
             },
             editTax(id, index,nama_produk,jumlah,harga,potongan,ppn,subtotal_lama){
-                var app = this;   
-                var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan); 
+                var app = this;
+                var subtotal = (parseFloat(jumlah) * parseFloat(harga)) - parseFloat(potongan);
 
-                if (ppn == '') { 
-                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+ 
-                    '<option value="Include" >Include</option>'+ 
-                    '<option value="Exclude" >Exclude</option>'+ 
-                    '</select></div>'; 
-                }else { 
-                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+ 
-                    '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+ 
-                    '</select></div>'; 
-                } 
+                if (ppn == '') {
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal"  class="swal2-input js-selectize-reguler">'+
+                    '<option value="Include" >Include</option>'+
+                    '<option value="Exclude" >Exclude</option>'+
+                    '</select></div>';
+                }else {
+                    var ppn_produk = '<select id="ppn_swal" name="ppn_swal" class="swal2-input js-selectize-reguler">'+
+                    '<option selected="selected" value="'+ppn+'">'+ppn+'</option>'+
+                    '</select></div>';
+                }
 
-                swal({ 
-                    title: titleCase(nama_produk), 
-                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+ 
-                    '<div class="row">'+ 
-                    '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+ 
-                    '<div class="col-sm-6 col-xs-6">'+ 
-                    '<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+ 
-                    '</div>', 
-                    animation: false, 
-                    showCloseButton: true, 
-                    showCancelButton: true, 
-                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK', 
-                    confirmButtonAriaLabel: 'Thumbs up, great!', 
-                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal', 
-                    cancelButtonAriaLabel: 'Thumbs down', 
+                swal({
+                    title: titleCase(nama_produk),
+                    html:'<i>Format : 10 (nominal) || 10% (persen)</i>'+
+                    '<div class="row">'+
+                    '<div class="col-sm-6 col-xs-6">'+ppn_produk+''+
+                    '<div class="col-sm-6 col-xs-6">'+
+                    '<input type="text" id="tax_swal" v-model="ppn_swal_input" class="swal2-input" placeholder="PAJAK"></div>'+
+                    '</div>',
+                    animation: false,
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fa fa-thumbs-o-up"></i> OK',
+                    confirmButtonAriaLabel: 'Thumbs up, great!',
+                    cancelButtonText: '<i class="fa fa-thumbs-o-down">Batal',
+                    cancelButtonAriaLabel: 'Thumbs down',
                     preConfirm: function () {
-                        return new Promise(function (resolve) { 
+                        return new Promise(function (resolve) {
                             resolve([
-                                $('#tax_swal').val(), 
+                                $('#tax_swal').val(),
                                 $('#ppn_swal').val()
-                                ]) 
-                        }) 
-                    } 
-                }).then(function (result) {   
+                                ])
+                        })
+                    }
+                }).then(function (result) {
                     if (result[0] == '' || result[0] == 0) {
-                        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error'); 
-                        return false; 
-                    }   
+                        swal('Oops...', 'Pajak Tidak Boleh 0 !', 'error');
+                        return false;
+                    }
                     else if (result[1] == '') {
-                        swal('Oops...', 'PPN Belum Di Isi', 'error'); 
-                        return false; 
+                        swal('Oops...', 'PPN Belum Di Isi', 'error');
+                        return false;
                     }else{
-                        var pajak = result[0]; 
-                        var pos = pajak.search("%"); 
+                        var pajak = result[0];
+                        var pos = pajak.search("%");
 
                         if (pos > 0) {
-                            pajak = pajak.replace("%",""); 
+                            pajak = pajak.replace("%","");
                             if (pajak > 100) {
-                                swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error'); 
-                                return false; 
-                            }else{
-                                var pajak = result[0];
-                                var ppn_edit = result[1];
-                                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
-                            } 
-                        }else{
-                            if (subtotal < result[0]) {
-                                swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error'); 
-                                return false; 
+                                swal('Oops...', 'Pajak Tidak Boleh Lebih Dari 100%!', 'error');
+                                return false;
                             }else{
                                 var pajak = result[0];
                                 var ppn_edit = result[1];
                                 app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
                             }
-                        } 
-                    } 
-                }); 
+                        }else{
+                            if (subtotal < result[0]) {
+                                swal('Oops...', 'Pajak Tidak Boleh Melebihi Subtotal!', 'error');
+                                return false;
+                            }else{
+                                var pajak = result[0];
+                                var ppn_edit = result[1];
+                                app.submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama);
+                            }
+                        }
+                    }
+                });
             },
             submitEditTax(pajak,id,nama_produk,ppn_edit,subtotal_lama){
                 var app = this;
@@ -1113,11 +1113,11 @@
                 .then(function (resp) {
                     app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
                     app.loading = false;
-                    app.getTbs();  
+                    app.getTbs();
 
                     var subtotal = (parseInt(app.returPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
-                    app.returPembelian.subtotal = subtotal                       
-                    app.returPembelian.total_akhir  = subtotal 
+                    app.returPembelian.subtotal = subtotal
+                    app.returPembelian.total_akhir  = subtotal
                 })
                 .catch(function (resp) {
                     app.loading = false;
@@ -1130,7 +1130,7 @@
                     text: "Anda Yakin Ingin Membatalkan Transaksi Ini ?",
                     buttons: {
                         cancel: true,
-                        confirm: "OK"                   
+                        confirm: "OK"
                     },
 
                 }).then((value) => {
@@ -1179,7 +1179,7 @@
                         potonganPersen = 0
                     }
 
-                    var potongan_nominal = parseFloat(app.returPembelian.subtotal) * (parseFloat(potonganPersen) / 100) 
+                    var potongan_nominal = parseFloat(app.returPembelian.subtotal) * (parseFloat(potonganPersen) / 100)
                     var total_akhir = parseFloat(app.returPembelian.subtotal,10) - parseFloat(potongan_nominal,10)
                     var selisih = total_akhir - app.returPembelian.potong_hutang;
                     if (selisih >= 0){
@@ -1247,7 +1247,7 @@
                     text: "Anda Yakin Ingin Menyelesaikan Transaksi Ini ?",
                     buttons: {
                         cancel: true,
-                        confirm: "OK"                   
+                        confirm: "OK"
                     },
 
                 }).then((value) => {
@@ -1262,7 +1262,7 @@
                 app.loading = true;
                 console.log(app.returPembelian.kas)
                 if (app.returPembelian.kas == '') {
-                    app.loading = false;    
+                    app.loading = false;
                     app.$swal("Silakan Pilih Kas Terlebih Dahulu").then((value) => {
                         app.openSelectizeKas();
                     });
@@ -1288,7 +1288,7 @@
                             app.returPembelian.potongan_faktur = 0
                             app.returPembelian.total_akhir = 0
                             app.returPembelian.pembayaran = 0
-                            app.inputTbsRetur.supplier = ''   
+                            app.inputTbsRetur.supplier = ''
                             window.open('retur-pembelian/cetak-retur-pembelian/'+resp.data.respons_retur,'_blank');
                             app.loading = false;
                         }
@@ -1296,7 +1296,7 @@
                     .catch(function (resp) {
                         console.log(resp);
                         app.loading = false;
-                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Pembelian");        
+                        alert("Tidak Dapat Menyelesaikan Transaksi Retur Pembelian");
                         app.errors = resp.response.data.errors;
                     });
                 }
@@ -1331,18 +1331,18 @@
                         app.returPembelian.pembayaran = selisih;
                     }
 
-                    $("#modal_selesai").show(); 
-                    this.$refs.pembayaran.$el.focus()           
+                    $("#modal_selesai").show();
+                    this.$refs.pembayaran.$el.focus()
                 })
                 .catch( (err) => {
                     console.log(err);
                     alert("Terjadi Masalah Hitung Nilai Potong Hutang");
-                })                   
+                })
             },
             tambahModalKas(){
                 $("#modal_tambah_kas").show();
                 $("#modal_selesai").hide();
-                this.$refs.kode_kas.focus(); 
+                this.$refs.kode_kas.focus();
             },
             hitungHargaKonversi(harga_beli){
                 var satuan = this.inputTbsRetur.satuan_produk.split("|");
@@ -1353,19 +1353,19 @@
                 this.hitungPotongHutang()
             },
             closeModal(){
-                $("#modal_selesai").hide(); 
-                $("#modal_pembelian").hide(); 
+                $("#modal_selesai").hide();
+                $("#modal_pembelian").hide();
             },
             closeModalInsertTbs(){
                 $("#modalInsertTbs").hide();
-                $("#modal_pembelian").show(); 
+                $("#modal_pembelian").show();
             },
             closeModalEditSatuan(){
                 $("#modalEditSatuan").hide();
             },
             closeModalKas(){
-                $("#modal_tambah_kas").hide(); 
-                $("#modal_selesai").show(); 
+                $("#modal_tambah_kas").hide();
+                $("#modal_selesai").show();
             },
             alert(pesan) {
                 this.$swal({
