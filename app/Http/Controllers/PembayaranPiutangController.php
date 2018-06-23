@@ -810,18 +810,23 @@ class PembayaranPiutangController extends Controller
         $arr = [];
         $kolom = '';
         $arrPenjualanPos = [];
+        $arrDetailPenjualanPiutang = [];
+        $PenjualanPos = PenjualanPos::select()->get();
+        $detailPembayaranPiutang = DetailPembayaranPiutang::select('no_faktur_penjualan')->get();
 
-        foreach($excels as $row) {
-            // $sisa_piutang = $pembayaran_piutangs->subtotal_piutang - $pembayaran_piutangs->jumlah_bayar;
-            $arrPenjualanPos[$row['no_transaksi']] = PenjualanPos::where('id', $row['no_transaksi'])->first();
+            foreach($PenjualanPos as $data) {
+                $arrPenjualanPos[$data->id] = $data;
+            }
+        foreach($detailPembayaranPiutang as $data) {
+            $arrDetailPenjualanPiutang[] = $data;
         }
-        // return response($arrPenjualanPos[4]->kredit);
+        // return response($arrPenjualanPos);
 
         // perulangan untuk menghandle error
-        /*foreach ($excels as $row) {
+        foreach ($excels as $row) {
 
             // validasi untuk data yang sudah ada di database
-            if (in_array(_lowerWithTrim($row['no_transaksi']), $customersDataInDB['no_transaksi'])) {
+            /*if (in_array(_lowerWithTrim($row['no_transaksi']), $customersDataInDB['no_transaksi'])) {
                 if (in_array(_lowerWithTrim($row['no_transaksi']), $customersDataInDB['no_transaksi'])) {
                     $kolom .= 'No Transaksi';
                 }
@@ -831,38 +836,51 @@ class PembayaranPiutangController extends Controller
                 // kosongkan variable
                 $kolom = '';
                 $arr = [];
+            }*/
+
+            // return $arrDetailPenjualanPiutang;
+
+            // validasi no transaksi yang tidak ada di database
+            if (!empty($row['no_transaksi']) && !array_key_exists((int)$row['no_transaksi'], $arrPenjualanPos)) {
+                $errorMessages[] = 'Baris ke ' . $baris . ': No Transaksi ' . $row['no_transaksi'] . ' tidak ada.';
+            } else {
+                // validasi data yang sudah ada
+                if (in_array($arrPenjualanPos[$row['no_transaksi']]->no_faktur, $arrDetailPenjualanPiutang))
+                    $errorMessages[] = 'Baris ke ' . $baris . ': No Transaksi ' . $row['no_transaksi'] . ' sudah tidak ada.';
             }
 
+
             // validasi untuk data wajib yang kosong
-            if (empty($row['no_transaksi']) || empty($row['total']) || empty($row['kas']) || empty($row['waktu'])) {
+            if (empty($row['no_transaksi']) || empty($row['piutang']) || empty($row['potongan']) && $row['potongan'] != 0 || empty($row['pembayaran'])) {
                 if (empty($row['no_transaksi'])) {
                     $kolom .= 'No Transaksi';
                     $arr[] = ' ';
                 }
-                if (empty($row['total'])) {
+                if (empty($row['piutang'])) {
                     if (count($arr) == 0)
-                        $kolom .= 'Total';
+                        $kolom .= 'Piutang';
                     else
-                        $kolom .= ', Total';
+                        $kolom .= ', Piutang';
 
                     $arr[] = ' ';
                 }
-                if (empty($row['kas'])) {
+                if (empty($row['potongan']) && $row['potongan'] != 0) {
                     if (count($arr) == 0)
-                        $kolom .= 'Kas';
+                        $kolom .= 'Potongan';
                     else
-                        $kolom .= ', Kas';
+                        $kolom .= ', Potongan';
 
                     $arr[] = ' ';
                 }
-                if (empty($row['waktu'])) {
+                if (empty($row['pembayaran'])) {
                     if (count($arr) == 0)
-                        $kolom .= 'Waktu';
+                        $kolom .= 'Pembayaran';
                     else
-                        $kolom .= ', Waktu';
+                        $kolom .= ', Pembayaran';
 
                     $arr[] = ' ';
                 }
+                // return response($row['potongan']);
 
                 $errorMessages[] = 'Baris ke ' . $baris . ': ' . $kolom . ' tidak boleh kosong.';
                 // kosongkan variable
@@ -874,16 +892,16 @@ class PembayaranPiutangController extends Controller
 
 
             $baris++;
-        }*/
+        }
 
         // jika ada error kirim pesan error sebagai respon dan cegah penginsertan data
-        /*if (count($errorMessages) > 0) {
+        if (count($errorMessages) > 0) {
 
             // pisahkan masing2 pesan dengan baris baru agar nantinya terlihat rapih di swal
             $errorMessages = implode('<br>', $errorMessages);
             $data['errors'] = $errorMessages;
             return response()->json($data);
-        }*/
+        }
 
         // perulangan untuk insert data customer
         $no = 0;
