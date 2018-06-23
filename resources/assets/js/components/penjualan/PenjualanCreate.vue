@@ -506,7 +506,7 @@
 
       <form class="form-horizontal" v-on:submit.prevent="submitTambahPelanggan()"> 
         <div class="modal-body">
-          <h3 class="text-center"><b>Tambah Pelanggan {{ tambahPelanggan }}  </b></h3>
+          <h3 class="text-center"><b>Tambah Pelanggan  </b></h3>
 
             <form-tambah-pelanggan :data="tambahPelanggan"> </form-tambah-pelanggan> 
 
@@ -1042,7 +1042,31 @@ export default {
   });
 },
  submitTambahPelanggan() {
-     console.log(this.tambahPelanggan)
+    
+     const app = this
+     const url = window.location.origin+(window.location.pathname).replace("dashboard", "customer")
+
+     axios.post(url, app.tambahPelanggan)
+	 .then((resp) => {
+
+        console.log('success')
+        const newCustomer = { 
+            id : resp.data,
+            nama_pelanggan : app.tambahPelanggan.name,
+            pelanggan : `${app.tambahPelanggan.name} - ${app.tambahPelanggan.kode_customer} - ${app.tambahPelanggan.no_telp}` 
+        }
+        app.alert('Menambahkan Pelanggan')
+        $("#modalTambahPelanggan").hide()
+        $("#modalSimpanPenjualan").show()
+        app.$store.commit('ADD_PELANGGAN_LIST',newCustomer)
+        app.penjualan.pelanggan = resp.data
+
+     })
+	 .catch((resp) => {
+        alert('Terjadi Kesalahan')
+        console.log(resp)
+     })
+
 },
 defaultKas() {
  var app = this;
