@@ -141,6 +141,8 @@ class OtoritasController extends Controller
      $permission_supplier = Permission::where('grup','supplier')->get();
      $permission_setting_promo = Permission::where('grup','setting_promo')->get();
      $permission_retur_pembelian = Permission::where('grup','retur_pembelian')->get();
+     $permission_order_pembelian = Permission::where('grup','order_pembelian')->get();
+     $permission_penerimaan_produk = Permission::where('grup','penerimaan_produk')->get();
      $otoritas = Role::where('id',$id)->first();
 
      $arrayPermissionUser = array();
@@ -170,6 +172,8 @@ class OtoritasController extends Controller
      $arrayPermissionSupplier = array();
      $arrayPermissionSettingPromo = array();
      $arrayPermissionReturPembelian = [];
+     $arrayPermissionOrderPembelian = [];
+     $arrayPermissionPenerimaanProduk = [];
 
      $permission_role = PermissionRole::with('permissions')->where('role_id',$id)->get();
      foreach ($permission_role as $permission_roles) {
@@ -254,6 +258,12 @@ class OtoritasController extends Controller
    if ($permission_roles->permissions->grup == "retur_pembelian"){
      array_push($arrayPermissionReturPembelian, $permission_roles->permission_id);
    }
+   if ($permission_roles->permissions->grup == "order_pembelian"){
+     array_push($arrayPermissionOrderPembelian, $permission_roles->permission_id);
+   }
+   if ($permission_roles->permissions->grup == "penerimaan_produk"){
+     array_push($arrayPermissionPenerimaanProduk, $permission_roles->permission_id);
+   }
  }
 
  return response()->json([
@@ -284,6 +294,8 @@ class OtoritasController extends Controller
   "permission_supplier" => $permission_supplier,
   "permission_setting_promo" => $permission_setting_promo,
   "permission_retur_pembelian" => $permission_retur_pembelian,
+  "permission_order_pembelian" => $permission_order_pembelian,
+  "permission_penerimaan_produk" => $permission_penerimaan_produk,
 
   "otoritas"     => $otoritas,
 
@@ -314,6 +326,8 @@ class OtoritasController extends Controller
   "data_permission_supplier" => $arrayPermissionSupplier,
   "data_permission_setting_promo" => $arrayPermissionSettingPromo,
   "data_permission_retur_pembelian" => $arrayPermissionReturPembelian,
+  "data_permission_order_pembelian" => $arrayPermissionOrderPembelian,
+  "data_permission_penerimaan_produk" => $arrayPermissionPenerimaanProduk,
 ]);
 }
 
@@ -485,6 +499,14 @@ class OtoritasController extends Controller
     foreach ($request->retur_pembelian as $setting_retur_pembelian) {
       $permission_retur_pembelian = Permission::whereId($setting_retur_pembelian)->first();
       $role->attachPermission($permission_retur_pembelian);
+    }
+    foreach ($request->order_pembelian as $setting_order_pembelian) {
+      $permission_order_pembelian = Permission::whereId($setting_order_pembelian)->first();
+      $role->attachPermission($permission_order_pembelian);
+    }
+    foreach ($request->penerimaan_produk as $setting_penerimaan_produk) {
+      $permission_penerimaan_produk = Permission::whereId($setting_penerimaan_produk)->first();
+      $role->attachPermission($permission_penerimaan_produk);
     }
   }
 

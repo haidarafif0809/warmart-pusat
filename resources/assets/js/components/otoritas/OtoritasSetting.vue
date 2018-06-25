@@ -154,6 +154,7 @@
               </label>
             </div>
             <!-- Pembelian  -->
+            <!--end supplier -->
 
           </div>
 
@@ -215,6 +216,15 @@
             <!-- setting_promo  -->
           </div>
           <div class="col-sm-2">
+            <!-- Order Pembelian  -->
+            <b>Order Pembelian</b>
+            <div class="checkbox" v-for="permission_order_pembelian, index in permission_order_pembelian">
+              <label>
+                <input type="checkbox" name="setting_order_pembelian" v-bind:value="permission_order_pembelian.id" v-model="setting_otoritas.order_pembelian"> {{permission_order_pembelian.display_name}}
+              </label>
+            </div>
+            <!-- Order Pembelian  -->
+
             <!-- satuan  -->
             <b>Satuan</b>
             <div class="checkbox" v-for="permission_satuan, index in permission_satuan">
@@ -235,6 +245,14 @@
 
           </div>
           <div class="col-sm-2">
+          <!-- Penerimaan Produk  -->
+          <b>Penerimaan Produk</b>
+          <div class="checkbox" v-for="permission_penerimaan_produk, index in permission_penerimaan_produk">
+            <label>
+              <input type="checkbox" name="setting_penerimaan_produk" v-bind:value="permission_penerimaan_produk.id" v-model="setting_otoritas.penerimaan_produk"> {{permission_penerimaan_produk.display_name}}
+            </label>
+          </div>
+          <!-- Penerimaan Produk  -->
 
             <!-- OTORITAS KAS -->
             <b>Kas</b>
@@ -342,6 +360,8 @@ export default {
      permission_supplier: [],
      permission_setting_promo: [],
      permission_retur_pembelian: [],
+     permission_order_pembelian: [],
+     permission_penerimaan_produk: [],
      setting_otoritas : {
       user : [],
       otoritas : [],
@@ -370,6 +390,8 @@ export default {
       supplier : [],
       setting_promo : [],
       retur_pembelian : [],
+      order_pembelian : [],
+      penerimaan_produk : [],
     },
     nama_otoritas : '',
     pilih_semua : false,
@@ -423,6 +445,8 @@ methods: {
       app.permission_supplier = resp.data.permission_supplier
       app.permission_setting_promo = resp.data.permission_setting_promo
       app.permission_retur_pembelian = resp.data.permission_retur_pembelian
+      app.permission_order_pembelian = resp.data.permission_order_pembelian
+      app.permission_penerimaan_produk = resp.data.permission_penerimaan_produk
 
 
       app.nama_otoritas = resp.data.otoritas.display_name
@@ -454,10 +478,12 @@ methods: {
       app.setting_otoritas.supplier = resp.data.data_permission_supplier
       app.setting_otoritas.setting_promo = resp.data.data_permission_setting_promo
       app.setting_otoritas.retur_pembelian = resp.data.data_permission_retur_pembelian
+      app.setting_otoritas.order_pembelian = resp.data.data_permission_order_pembelian
+      app.setting_otoritas.penerimaan_produk = resp.data.data_permission_penerimaan_produk
 
       app.loading = false;
       app.seen = true;
-      console.log(app.setting_otoritas)
+      console.log(app.setting_otoritas.penerimaan_produk)
     })
     .catch(function (resp) {
       console.log(resp);
@@ -637,6 +663,14 @@ methods: {
         $.each(app.permission_retur_pembelian, function (i, item) {
           app.setting_otoritas.retur_pembelian.push(app.permission_retur_pembelian[i].id)
         });
+        // OTORITAS ORDER PEMBELIAN
+        $.each(app.permission_order_pembelian, function (i, item) {
+          app.setting_otoritas.order_pembelian.push(app.permission_order_pembelian[i].id)
+        });
+        // OTORITAS RETUR PEMBELIAN
+        $.each(app.permission_penerimaan_produk, function (i, item) {
+          app.setting_otoritas.penerimaan_produk.push(app.permission_penerimaan_produk[i].id)
+        });
 
 
       }else{
@@ -677,6 +711,8 @@ methods: {
         app.setting_otoritas.supplier.splice(0)
         app.setting_otoritas.setting_promo.splice(0)
         app.setting_otoritas.retur_pembelian.splice(0)
+        app.setting_otoritas.order_pembelian.splice(0)
+        app.setting_otoritas.penerimaan_produk.splice(0)
       },
       alert(pesan) {
         this.$swal({

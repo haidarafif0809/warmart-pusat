@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Permission;
 
 class PermissionOrderPembelianSeeder extends Seeder
 {
