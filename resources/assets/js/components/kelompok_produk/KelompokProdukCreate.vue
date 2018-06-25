@@ -36,53 +36,47 @@
 						</div>
 					</form>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </template>
-
 
 <script>
 export default {
 	data: function () {
 		return {
 			errors: [],
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "kelompok-produk"),
+			url : window.location.origin + (window.location.pathname).replace("dashboard", "kelompok-produk"),
 			kelompok_produk: {
 				nama_kelompok : '',
 				icon_kelompok : ''
 			},
 			message : ''
 		}
-
 	},
 	methods: {
 		saveForm() {
 			var app = this;
 			var newkelompok_produk = app.kelompok_produk;
 			axios.post(app.url, newkelompok_produk)
-			.then(function (resp) {
-				app.message = 'Menambah Kelompok Produk '+ app.kelompok_produk.nama_kelompok;
-				app.alert(app.message);
+			.then((resp) => {
+				swal({
+					title: 'Berhasil!',
+					type: 'success',
+					text: 'Berhasil Menambah Kelompok Produk ' + app.kelompok_produk.nama_kelompok,
+					timer: 1800,
+					showConfirmButton: false
+				});
 				app.kelompok_produk.nama_kelompok = ''
 				app.kelompok_produk.icon_kelompok = ''
 				app.errors = '';
 				app.$router.replace('/kelompok-produk/');
-
 			})
-			.catch(function (resp) {
+			.catch((resp) => {
 				app.success = false;
 				app.errors = resp.response.data.errors;
 			});
 		},
-		alert(pesan) {
-			this.$swal({
-				title: "Berhasil!",
-				text: pesan,
-				icon: "success",
-			});
-		}
 	}
 }
 </script>

@@ -55,6 +55,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
   <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
   <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
   <link href="{{ asset('css/font-awesome.min.css')}}" rel="stylesheet"/>
+  <link href="{{ asset('css/robotoSlab.css')}}" rel="stylesheet"/>
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}
   {!! Twitter::generate() !!}
@@ -65,6 +66,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
 </link>
 </head>
 <style type="text/css">
+
 
 .navbar .navbar-brand {
   position: relative;
@@ -633,7 +635,7 @@ p {
     <div class="content">
       <div class="row">
         <div class="col-md-3">
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Tentang Kami
           </h5>
           @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -648,7 +650,7 @@ p {
           @endif
         </div>
         <div class="col-md-3">
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Hubungi Kami
           </h5>
           <div class="social-feed">
@@ -689,7 +691,7 @@ p {
           @if(Agent::isMobile())
           <div class="row">
             <div class="col-xs-6">
-              <h5 style="font-size: 14px; mar">
+              <h5 class="robotoSlab" style="font-size: 14px; mar">
                 Ikuti Kami Di
               </h5>
               <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -715,7 +717,7 @@ p {
             </div>
 
             <div class="col-xs-6">
-              <h5 style="font-size: 14px; mar">
+              <h5 class="robotoSlab" style="font-size: 14px; mar">
                 Download Apps
               </h5>
               <a href="<?=$settingFooter->play_store;?>">
@@ -726,7 +728,7 @@ p {
 
           @else
 
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Ikuti Kami Di
           </h5>
           <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -749,7 +751,7 @@ p {
               <i class="fa fa-google-plus"> </i>
             </a> 
           </button>
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Download Apps
           </h5>
           <a href="<?=$settingFooter->play_store;?>">
@@ -760,7 +762,7 @@ p {
         <div class="col-md-3">
           <div class="row" style="padding-left: 15px">
             <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-              <h5 style="font-size: 14px;" class="pull-left">
+              <h5 class="robotoSlab" style="font-size: 14px;" class="pull-left">
                 Jasa Pengiriman
               </h5>
             </div>
@@ -773,7 +775,7 @@ p {
             @endforeach
 
             <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-              <h5 style="font-size: 14px;" class="pull-left">
+              <h5 class="robotoSlab" style="font-size: 14px;" class="pull-left">
                 Metode Pembayaran
               </h5>
             </div>

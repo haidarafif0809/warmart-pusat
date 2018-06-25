@@ -64,7 +64,7 @@
                 <div class="card-content">
                     <h4 class="card-title"> Stok Opname</h4>
 
-                    <div class="col-md-4 col-xs-12" v-if="otoritas.tambah_stok_opname">
+                    <div class="col-md-4 col-xs-12" v-if="inputProduk">
                         <div class="card card-produk" style="margin-bottom: 1px; margin-top: 1px;">
 
                             <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
@@ -218,6 +218,7 @@ import { mapState } from 'vuex';
 export default {
     data: function () {
         return {
+            inputProduk : true,
             stokOpname: [],
             stokOpnameData: {},
             totalStokOpname: {},
@@ -288,21 +289,25 @@ export default {
                 page = 1;
             }
             axios.get(app.url+'/view?page='+page)
-            .then(function (resp) {
+            .then( resp => {
                 app.stokOpname = resp.data.data;
                 app.stokOpnameData = resp.data;
                 app.otoritas = resp.data.otoritas.original;
                 app.loading = false;
                 app.seen = false;
                 $("#btnExcel").hide();
-                if (app.otoritas.tambah_stok_opname == 1) {                    
+                if (app.inputProduk) {                    
                     app.openSelectizeProduk();
                 }
+                
+                if (app.otoritas.tambah_stok_opname != 1) {                    
+                    app.inputProduk = false
+                }
             })
-            .catch(function (resp) {
-                console.log(resp);
+            .catch(err => {
+                console.log(err);
                 app.loading = false;
-                alert("Tidak Dapat Memuat Stok Opname");
+                alert("Tidak Dapat Memuat Stok Opnameasda");
             });
         },
         getHasilPencarian(page){

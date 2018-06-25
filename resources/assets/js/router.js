@@ -187,6 +187,7 @@ import BankWarungEdit from './components/bank_warung/BankWarungEdit.vue';
 // SETTING PENGIRIMAN
 import SettingPengirimanIndex from './components/setting_pengiriman/SettingPengirimanIndex.vue';
 import SettingPengirimanTambahBank from './components/setting_pengiriman/SettingPengirimanTambahBank.vue';
+import SettingPengirimanEditBank from './components/setting_pengiriman/SettingPengirimanEditBank.vue';
 
 // otoritas 
 import OtoritasIndex from './components/otoritas/OtoritasIndex.vue';
@@ -211,7 +212,7 @@ import PenerimaanProdukProsesEdit from './components/penerimaan_produk/Penerimaa
 import PenerimaanProdukEdit from './components/penerimaan_produk/PenerimaanProdukEdit.vue';
 
 // SETTING FIXEL
-import SettingFixel from './components/setting_pixel/SettingFixel.vue';
+import SettingPixel from './components/setting_pixel/SettingPixel.vue';
 
 // SETTING SEO
 import OptimasiSeo from './components/optimasi_seo/OptimasiSeo.vue';
@@ -223,6 +224,9 @@ import ColorThemeCreate from './components/color_theme/ColorThemeCreate.vue';
 // RETUR PEMBELIAN
 import ReturPembelianIndex from './components/retur_pembelian/ReturPembelianIndex.vue';
 import ReturPembelianCreate from './components/retur_pembelian/ReturPembelianCreate.vue';
+import ReturPembelianDetail from './components/retur_pembelian/ReturPembelianDetail.vue';
+import ReturPembelianProsesEdit from './components/retur_pembelian/ReturPembelianProsesEdit.vue';
+import ReturPembelianEdit from './components/retur_pembelian/ReturPembelianEdit.vue';
 
 
 const routes = [{
@@ -812,6 +816,10 @@ const routes = [{
         component: SettingPengirimanTambahBank,
         name: 'settingPengirimanTambahBank'
     },{
+        path: '/setting-pengiriman-edit-bank/:id',
+        component: SettingPengirimanEditBank,
+        name: 'settingPengirimanEditBank'
+    },{
         path: '/bank-warung',
         component: BankWarungIndex,
         name: 'indexBankWarung'
@@ -864,9 +872,9 @@ const routes = [{
         component: PembelianOrderIndex, 
         name: 'indexPembelianOrder'
     },{ 
-        path: '/setting-fixel', 
-        component: SettingFixel, 
-        name: 'settingFixelIndex'
+        path: '/setting-pixel', 
+        component: SettingPixel, 
+        name: 'settingPixelIndex'
     },{ 
         path: '/penerimaan-produk', 
         component: PenerimaanProdukIndex, 
@@ -907,6 +915,18 @@ const routes = [{
         path: '/create-retur-pembelian',
         component: ReturPembelianCreate,
         name: 'createReturPembelian'
+    }, {
+        path: '/detail-retur-pembelian/:id',
+        component: ReturPembelianDetail,
+        name: 'detailReturPembelian'
+    }, {
+        path: '/proses-edit-retur-pembelian/:id',
+        component: ReturPembelianProsesEdit,
+        name: 'prosesEditReturPembelian'
+    }, {
+        path: '/edit-retur-pembelian/:id',
+        component: ReturPembelianEdit,
+        name: 'editReturPembelian'
     }
 
 

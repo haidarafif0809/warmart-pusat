@@ -42,7 +42,7 @@ class CustomerController extends Controller
     //DATA PAGINATION
         $respons['current_page']   = $customer->currentPage();
         $respons['data']           = $array;
-        $respons['otoritas']      = $this->otoritasCustomer();
+        $respons['otoritas']       = $this->otoritasCustomer();
         $respons['first_page_url'] = url($url . '?page=' . $customer->firstItem());
         $respons['from']           = 1;
         $respons['last_page']      = $customer->lastPage();
@@ -87,63 +87,62 @@ class CustomerController extends Controller
     {
 
         $customer = Customer::where('tipe_user', 3)->where('id_warung', Auth::user()->id_warung)->orderBy('created_at', 'DESC')->paginate(10);
+        $array_customer = [];
+
+        foreach ($customer as $customers) {
+            array_push($array_customer, [            
+                'customer'   => $customers,
+                'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
+            ]);
+        }
+
+        $url     = '/customer/view';
+        $respons = $this->paginationData($customer, $array_customer, $url);
+
+        return response()->json($respons);
+
+    }
+
+    public function cekStatusPelanggan($pelanggan){  
+
+        if (PenjualanPos::where('pelanggan_id',$pelanggan)->count() > 0) {
+            return 1;
+        }elseif (PesananPelanggan::where('id_pelanggan',$pelanggan)->count() > 0) {
+            return 1;
+        }elseif (Penjualan::where('id_pelanggan',$pelanggan)->count() > 0) {
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public function pencarian(Request $request)
+    {
+        $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
+            $query->orwhere('name', 'LIKE', "%$request->search%")
+            ->orWhere('alamat', 'LIKE', "%$request->search%")
+            ->orWhere('kode_pelanggan', 'LIKE', "%$request->search%")
+            ->orWhere('wilayah', 'LIKE', "%$request->search%")
+            ->orWhere('no_telp', 'LIKE', "%$request->search%")
+            ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
+        })
+        ->paginate(10);
+
         $array_customer = array();
 
         foreach ($customer as $customers) {
-         array_push($array_customer, [            
-            'customer'   => $customers,
-            'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
-        ]);
-     }
+            array_push($array_customer, [            
+                'customer'   => $customers,
+                'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
+            ]);
+        }
 
 
-     $url     = '/customer/view';
-     $respons = $this->paginationData($customer, $array_customer, $url);
+        $url     = '/customer/pencarian';
+        $respons = $this->paginationData($customer, $array_customer, $url);
 
-     return response()->json($respons);
-
- }
-
- public function cekStatusPelanggan($pelanggan){  
-
-    if (PenjualanPos::where('pelanggan_id',$pelanggan)->count() > 0) {
-        return 1;
-    }elseif (PesananPelanggan::where('id_pelanggan',$pelanggan)->count() > 0) {
-        return 1;
-    }elseif (Penjualan::where('id_pelanggan',$pelanggan)->count() > 0) {
-        return 1;
-    }else{
-        return 0;
+        return response()->json($respons);
     }
-}
-
-public function pencarian(Request $request)
-{
-    $customer = Customer::where('tipe_user', 3)->where(function ($query) use ($request) {
-        $query->orwhere('name', 'LIKE', "%$request->search%")
-        ->orWhere('alamat', 'LIKE', "%$request->search%")
-        ->orWhere('kode_pelanggan', 'LIKE', "%$request->search%")
-        ->orWhere('wilayah', 'LIKE', "%$request->search%")
-        ->orWhere('no_telp', 'LIKE', "%$request->search%")
-        ->orWhere('tgl_lahir', 'LIKE', "%$request->search%");
-    })
-    ->paginate(10);
-
-    $array_customer = array();
-
-    foreach ($customer as $customers) {
-     array_push($array_customer, [            
-        'customer'   => $customers,
-        'status_pelanggan' => $this->cekStatusPelanggan($customers->id)
-    ]);
- }
-
-
- $url     = '/customer/pencarian';
- $respons = $this->paginationData($customer, $array_customer, $url);
-
- return response()->json($respons);
-}
 
     /**
      * Show the form for creating a new resource.
@@ -422,96 +421,157 @@ public function pencarian(Request $request)
     public function importExcel(Request $request)
     {
 
+        function _lowerWithTrim($arg) {
+            return strtolower(trim($arg));
+        }
+
         $warung_id = Auth::user()->id_warung;
-        // validasi untuk memastikan file yang diupload adalah excel
-        $this->validate($request, ['excel' => 'required|mimes:xls,xlsx']);
+        
         // ambil file yang baru diupload
         $excel = $request->file('excel');
+
         // baca sheet pertama
         $excels = Excel::selectSheetsByIndex(0)->load($excel, function ($reader) {
         })->get();
-
-        // rule untuk validasi setiap row pada file excel
-        $rowRules = [
-            'Nama Customer'     => 'required',
-            'Email'             => 'nullable|unique:users,email',
-            'Kode Customer'    => 'nullable|unique:users,kode_pelanggan|max:50',
-            'Alamat'            => 'required',
-            'Nomor Telpon'           => 'without_spaces|unique:users,no_telp|numeric',
-            'Tanggal Lahir'         => 'required|date'
-        ];
-        // Catat semua id pelanggan baru
-        // ID ini kita butuhkan untuk menghitung total buku yang berhasil diimport
         
-        $errors     = [];
-        $lineErrors = [];
-        $no         = 1;         
+        $no         = 1;  
+        $customerList = Customer::select('email', 'kode_pelanggan', 'no_telp')->get();
 
+        // membuat array data customer yang sudah ada di database
+        $customersDataInDB = [];
+        $customersDataInDB['email'] = [];
+        $customersDataInDB['kode_pelanggan'] = [];
+        
+        foreach($customerList as $val) {
 
+            if (_lowerWithTrim($val->email) != '')
+                $customersDataInDB['email'][] = _lowerWithTrim($val->email);
 
-        // Perulang kedua, digunakan untuk menambahkan data pelanggan jika tidak terjadi error.
+            if (_lowerWithTrim($val->kode_pelanggan) != '')
+                $customersDataInDB['kode_pelanggan'][] = _lowerWithTrim($val->kode_pelanggan);
+
+            if (_lowerWithTrim($val->no_telp) != '')
+                $customersDataInDB['no_telp'][] = _lowerWithTrim($val->no_telp);
+        }
+        
+        // return response($customersDataInDB);
+
+        $errorMessages = [];
+        $baris = 1;
+        $arr = [];
+        $kolom = '';
+
+        // perulangan untuk menghandle error
         foreach ($excels as $row) {
-            // JIKA PELANGGAN SUDAH ADA DI DB MAKA TIDAK DIIMPORT
 
-            $no++;
-
-            $data_pelanggan = Customer::select(['kode_pelanggan', 'no_telp', 'email'])
-            ->where(function ($query) use ($row) {
-                $query->orwhere('kode_pelanggan', $row['kode_customer'])
-                ->orwhere('no_telp', $row['nomor_telpon'])
-                ->orwhere('email', $row['email']);
-            });
-
-            if ($data_pelanggan->count() > 0) {
-                continue;
-            }
-
-                    // Jika terjadi error, maka perintah dihentikan sehingga tidak ada data yg di insert ke database
-            if (count($errors) > 0) {
-                // Buat variable tipe array, dengan index pesanError.
-                $pesan = ['pesanError' => ''];
-
-                // Memasukan nilai error yg terjadi, kedalam variabel $pesan yg sudah kita buat tadi.
-                foreach ($errors['nama_customer'] as $key => $value) {
-                    if ($value['line'] == end($lineErrors)) {
-                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'];
-                    } else {
-                        $pesan['pesanError'] .= $value['line'] . '. ' . $value['message'] . '<br>';
-                    }
+            // validasi untuk data yang sudah ada di database
+            if (in_array(_lowerWithTrim($row['email']), $customersDataInDB['email']) || in_array(_lowerWithTrim($row['kode_customer']), $customersDataInDB['kode_pelanggan']) || in_array(_lowerWithTrim($row['nomor_telpon']), $customersDataInDB['no_telp'])) {
+                if (in_array(_lowerWithTrim($row['email']), $customersDataInDB['email'])) {
+                    $kolom .= 'Email';
+                    $arr[] = ' ';
                 }
-                return response()->json($pesan);
+                if (in_array(_lowerWithTrim($row['kode_customer']), $customersDataInDB['kode_pelanggan'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Kode Pelanggan';
+                    else
+                        $kolom .= ', Kode Pelanggan';
+
+                    $arr[] = ' ';
+                }
+                if (in_array(_lowerWithTrim($row['nomor_telpon']), $customersDataInDB['no_telp'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Nomor Telepon';
+                    else
+                        $kolom .= ', Nomor Telepon';
+
+                    $arr[] = ' ';
+                }
+
+                $errorMessages[] = 'Baris ke ' . $baris . ': ' . $kolom . ' sudah ada.';
+
+                // kosongkan variable
+                $kolom = '';
+                $arr = [];
             }
 
+            // validasi untuk data wajib yang kosong
+            if (empty($row['nama_customer']) || empty($row['nomor_telpon']) || empty($row['email']) || empty($row['alamat'])) {
+                if (empty($row['nama_customer'])) {
+                    $kolom .= 'Nama Customer';
+                    $arr[] = ' ';
+                }
+                if (empty($row['nomor_telpon'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Nomor Telepon';
+                    else
+                        $kolom .= ', Nomor Telepon';
 
-            // Membuat validasi untuk row di excel, disini kita ubah baris yang sedang di proses menjadi array.
-            $validator   = Validator::make($row->toArray(), $rowRules);        
+                    $arr[] = ' ';
+                }
+                if (empty($row['email'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Email';
+                    else
+                        $kolom .= ', Email';
 
+                    $arr[] = ' ';
+                }
+                if (empty($row['alamat'])) {
+                    if (count($arr) == 0)
+                        $kolom .= 'Alamat';
+                    else
+                        $kolom .= ', Alamat';
 
-            if ($setting_aplikasi = $this->settingAplikasi()->tipe_aplikasi == 0) {
-                $status_konfirmasi = 0;
-            } else {
-                $status_konfirmasi = 1;
+                    $arr[] = ' ';
+                }
+
+                $errorMessages[] = 'Baris ke ' . $baris . ': ' . $kolom . ' tidak boleh kosong.';
+                // kosongkan variable
+                $kolom = '';
+                $arr = [];
             }
-        //INSERT CUSTOMER
+
+            // validasi masukkan input yang tidak benar
+            if (!preg_match('/^[0-9]*$/', $row['nomor_telpon'])) {
+                $errorMessages[] = 'Baris ke ' . $baris . ': Nomor Telepon hanya boleh berisi angka.';
+            }
+
+            $baris++;
+        }
+
+        // jika ada error kirim pesan error sebagai respon dan cegah penginsertan data
+        if (count($errorMessages) > 0) {
+
+            // pisahkan masing2 pesan dengan baris baru agar nantinya terlihat rapih di swal
+            $errorMessages = implode('<br>', $errorMessages);
+            $data['errors'] = $errorMessages;
+            return response()->json($data);
+        }
+
+        // perulangan untuk insert data customer
+        $no = 0;
+        foreach ($excels as $row) {            
+            // INSERT CUSTOMER
             $customer_baru = Customer::create([
                 'name'              => $row['nama_customer'],
                 'email'             => $row['email'],
                 'kode_pelanggan'    => $row['kode_customer'],
                 'alamat'            => $row['alamat'],
                 'no_telp'           => $row['nomor_telpon'],
+                'id_warung'         => Auth::user()->id_warung,
                 'tgl_lahir'         => $row['tanggal_lahir'],
                 'tipe_user'         => 3,
-                'status_konfirmasi' => $status_konfirmasi,
+                'status_konfirmasi' => ($setting_aplikasi = $this->settingAplikasi()->tipe_aplikasi == 0 ? 0 : 1),
                 'password'          => bcrypt('123456'),
             ]);
 
-        //INSERT OTORITAS CUSTOMER
+            // INSERT OTORITAS CUSTOMER
             $customer_baru->attachRole(3);
-
+            $no++;
         }
-// Hitung Jumlah Produk Yang Diimport
-        $hitung_pelanggan['jumlahPelanggan'] = $no - 1;
 
-        return response()->json($hitung_pelanggan);
+        // Hitung Jumlah Produk Yang Diimport
+        $data['jumlah_pelanggan'] = $no;
+        return response()->json($data);
     }
 }
