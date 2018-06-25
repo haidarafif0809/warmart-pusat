@@ -688,9 +688,9 @@
                     app.inputTbsPembayaranPiutang.potongan = 0;
                     app.$refs.potongan.$el.focus();
                 } else {
-                    console.log('tambahTbsPembayaranPiutang:', newTbsPembayaranPiutang);
                     axios.post(app.url_piutang+'/proses-tambah-tbs-pembayaran-piutang',newTbsPembayaranPiutang)
                     .then((resp) => {
+                        console.log('tambahTbsPembayaranPiutang:', resp.data);
 
                         if (resp.data != 0) {
                             var subtotal = parseFloat(app.pembayaranPiutang.subtotal) + parseFloat(resp.data.jumlah_bayar)
@@ -1076,7 +1076,7 @@
                             swal({
                                 title: 'Berhasil!',
                                 type: 'success',
-                                text: resp.data.jumlah_data + ' Data Berhasil Diimport.',
+                                text: typeof resp.data.jumlah_data == 'number' ? resp.data.jumlah_data + ' Data Berhasil Diimport.' : resp.data.jumlah_data,
                                 timer: 1800,
                                 showConfirmButton: false
                             });

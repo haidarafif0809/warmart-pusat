@@ -811,16 +811,26 @@ class PembayaranPiutangController extends Controller
         $kolom = '';
         $arrPenjualanPos = [];
         $arrDetailPenjualanPiutang = [];
+        $arrTransaksiPiutang = [];
         $PenjualanPos = PenjualanPos::select()->get();
         $detailPembayaranPiutang = DetailPembayaranPiutang::select('no_faktur_penjualan')->get();
-
-            foreach($PenjualanPos as $data) {
-                $arrPenjualanPos[$data->id] = $data;
-            }
+        $TransaksiPiutang = TransaksiPiutang::select(['penjualan_pos.id', 'penjualan_pos.no_faktur', DB::raw('IFNULL(SUM(transaksi_piutangs.jumlah_masuk),0) - IFNULL(SUM(transaksi_piutangs.jumlah_keluar),0) AS sisa_piutang')])
+            ->leftJoin('penjualan_pos', 'transaksi_piutangs.id_transaksi', '=', 'penjualan_pos.id')
+            ->leftJoin('users', 'users.id', '=', 'penjualan_pos.pelanggan_id')
+            ->where('penjualan_pos.status_penjualan', 'Piutang')
+            ->where('penjualan_pos.warung_id', Auth::user()->id_warung)
+            ->groupBy('transaksi_piutangs.id_transaksi')
+            ->having('sisa_piutang', '>', 0)
+            ->get();
+        foreach($PenjualanPos as $data) {
+            $arrPenjualanPos[$data->id] = $data;
+        }
         foreach($detailPembayaranPiutang as $data) {
             $arrDetailPenjualanPiutang[] = $data;
         }
-        // return response($arrPenjualanPos);
+        foreach($TransaksiPiutang as $data) {
+            $arrTransaksiPiutang[$data->id] = $data;
+        }
 
         // perulangan untuk menghandle error
         foreach ($excels as $row) {
@@ -844,9 +854,10 @@ class PembayaranPiutangController extends Controller
             if (!empty($row['no_transaksi']) && !array_key_exists((int)$row['no_transaksi'], $arrPenjualanPos)) {
                 $errorMessages[] = 'Baris ke ' . $baris . ': No Transaksi ' . $row['no_transaksi'] . ' tidak ada.';
             } else {
-                // validasi data yang sudah ada
-                if (in_array($arrPenjualanPos[$row['no_transaksi']]->no_faktur, $arrDetailPenjualanPiutang))
-                    $errorMessages[] = 'Baris ke ' . $baris . ': No Transaksi ' . $row['no_transaksi'] . ' sudah tidak ada.';
+
+                // validasi data yang sudah lunas
+                if (!array_key_exists((int)$row['no_transaksi'], $arrTransaksiPiutang))
+                    $errorMessages[] = 'Baris ke ' . $baris . ': No Transaksi ' . $row['no_transaksi'] . ' sudah lunas.';
             }
 
 
@@ -904,28 +915,36 @@ class PembayaranPiutangController extends Controller
         }
 
         // perulangan untuk insert data customer
-        $no = 0;
+        $jumlahData = 0;
         foreach ($excels as $row) {            
             $session_id = session()->getId();
             $subtotal_piutang = $row['piutang'] - $row['potongan'];
+            $dataTbs   = TbsPembayaranPiutang::where('no_faktur_penjualan', $arrTransaksiPiutang[$row['no_transaksi']]->no_faktur)
+            ->where('session_id', $session_id)->where('warung_id', Auth::user()->id_warung)->count();
 
-            $tbs_pembayaran_piutang = TbsPembayaranPiutang::create([
-                'session_id'          => $session_id,
-                'no_faktur_penjualan' => $arrPenjualanPos[$row['no_transaksi']]->no_faktur,
-                'jatuh_tempo'         => $arrPenjualanPos[$row['no_transaksi']]->tanggal_jt_tempo,
-                'piutang'             => $row['piutang'],
-                'potongan'            => $row['potongan'],
-                'jumlah_bayar'        => $row['pembayaran'],
-                'subtotal_piutang'    => $subtotal_piutang,
-                'pelanggan_id'        => $arrPenjualanPos[$row['no_transaksi']]->pelanggan_id,
-                'warung_id'           => Auth::user()->id_warung,
-            ]);
+            if ($dataTbs == 0) {
+                $tbs_pembayaran_piutang = TbsPembayaranPiutang::create([
+                    'session_id'          => $session_id,
+                    'no_faktur_penjualan' => $arrPenjualanPos[$row['no_transaksi']]->no_faktur,
+                    'jatuh_tempo'         => $arrPenjualanPos[$row['no_transaksi']]->tanggal_jt_tempo,
+                    'piutang'             => $row['piutang'],
+                    'potongan'            => $row['potongan'],
+                    'jumlah_bayar'        => $row['pembayaran'],
+                    'subtotal_piutang'    => $subtotal_piutang,
+                    'pelanggan_id'        => $arrPenjualanPos[$row['no_transaksi']]->pelanggan_id,
+                    'warung_id'           => Auth::user()->id_warung,
+                ]);
 
-            $no++;
+                $jumlahData++;
+            }
         }
 
         // Hitung Jumlah Produk Yang Diimport
-        $data['jumlah_data'] = $no;
+        if ($jumlahData == 0) {
+            $data['jumlah_data'] = 'Semua data di excel sudah diimport';
+        } else {
+            $data['jumlah_data'] = $jumlahData;
+        }
         return response()->json($data);
     }
 }
