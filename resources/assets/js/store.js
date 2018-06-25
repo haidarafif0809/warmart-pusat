@@ -99,6 +99,9 @@ const mutations = {
 	SET_SUPPLIER_LIST : (state, { list }) => {
 		state.supplier = list
 	},
+    ADD_PELANGGAN_LIST : (state, payload) => {
+        state.pelanggan.push(payload)
+    }
 
 }
 // Action mirip dengan mutation
