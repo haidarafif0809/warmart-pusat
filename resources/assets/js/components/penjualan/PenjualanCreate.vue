@@ -519,7 +519,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-simple" v-on:click="closeModalTambahPelanggan()">Close</button>
-        <button type="submit" class="btn btn-info">Submit</button>
+        <button id="btnTambahPelanggan" type="submit" class="btn btn-info">Submit </button>
       </div>
     </form>
 
@@ -1046,6 +1046,9 @@ export default {
      const app = this
      const url = window.location.origin+(window.location.pathname).replace("dashboard", "customer")
 
+     $("#btnTambahPelanggan").html('Mohon Tunggu, Sedang menyimpan data ... <i v-if="loading" class="fa fa-spinner fa-spin"></i>')
+     $("#btnTambahPelanggan").prop('disabled', true)
+
      axios.post(url, app.tambahPelanggan)
 	 .then((resp) => {
 
@@ -1055,11 +1058,23 @@ export default {
             nama_pelanggan : app.tambahPelanggan.name,
             pelanggan : `${app.tambahPelanggan.name} - ${app.tambahPelanggan.kode_customer} - ${app.tambahPelanggan.no_telp}` 
         }
-        app.alert('Menambahkan Pelanggan')
-        $("#modalTambahPelanggan").hide()
-        $("#modalSimpanPenjualan").show()
+
         app.$store.commit('ADD_PELANGGAN_LIST',newCustomer)
         app.penjualan.pelanggan = resp.data
+        app.alert('Menambahkan Pelanggan')
+
+        app.tambahPelanggan.name = ""
+        app.tambahPelanggan.no_telp = ""
+        app.tambahPelanggan.password = ""
+        app.tambahPelanggan.kode_customer = ""
+        app.tambahPelanggan.email = ""
+        app.tambahPelanggan.alamat = ""
+        app.tambahPelanggan.tgl_lahir = ""
+
+        $("#modalTambahPelanggan").hide()
+        $("#modalSimpanPenjualan").show()
+        $("#btnTambahPelanggan").html('Submit')
+        $("#btnTambahPelanggan").prop('disabled', false)
 
      })
 	 .catch((resp) => {
