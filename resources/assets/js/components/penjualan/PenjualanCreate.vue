@@ -508,11 +508,12 @@
         <div class="modal-body">
           <h3 class="text-center"><b>Tambah Pelanggan  </b></h3>
 
-            <form-tambah-pelanggan :data="tambahPelanggan"> </form-tambah-pelanggan> 
+            <form-tambah-pelanggan :data="tambahPelanggan" :errors="errors"> </form-tambah-pelanggan> 
 
             <div class="form-group">
                 <datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="tambahPelanggan.tgl_lahir" name="uniquename" v-bind:id="'tanggal_lahir'">
                 </datepicker>
+                <span v-if="errors.tgl_lahir" id="tgl_lahir_error" class="label label-danger">{{ errors.tgl_lahir[0] }}</span>
             </div>
 
       </div>
@@ -1078,8 +1079,11 @@ export default {
 
      })
 	 .catch((resp) => {
+        app.errors = resp.response.data.errors;
         alert('Terjadi Kesalahan')
         console.log(resp)
+        $("#btnTambahPelanggan").html('Submit')
+        $("#btnTambahPelanggan").prop('disabled', false)
      })
 
 },
