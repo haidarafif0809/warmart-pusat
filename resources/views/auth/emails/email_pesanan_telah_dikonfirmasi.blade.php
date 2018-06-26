@@ -400,9 +400,21 @@
 			                                                                Subtotal :
 			                                                            </td>
 			                                                            <td align="right" style="padding:3px">
-			                                                                <b> Rp. {{ number_format(($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim),0, ',', '.') }} </b>
+			                                                            	@if($pesanan_pelanggan->metode_pembayaran == 'Bayar di Tempat')
+			                                                                <b> Rp. {{ number_format(($pesanan_pelanggan->subtotal),0, ',', '.') }} </b>
+			                                                                @else
+			                                                                <b>Rp. {{ number_format(($pesanan_pelanggan->subtotal - $pesanan_pelanggan->biaya_kirim) - $pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b>
+			                                                                @endif
 			                                                            </td>
 			                                                        </tr>
+			                                                        @if($pesanan_pelanggan->metode_pembayaran == 'TRANSFER')
+					                                                <tr>
+					                                                    <td style="padding: 3px;"></td>
+					                                                    <td  align="right" style="padding:3px"></td>
+					                                                    <td  align="right" style="padding:3px">Kode Unik :</td>
+					                                                    <td  align="right" style="padding:3px"><b>Rp. {{number_format($pesanan_pelanggan->kode_unik_transfer ,0, ',', '.')}}</b></td>
+					                                                </tr>
+					                                                @endif
 			                                                        <tr>
 			                                                            <td style="padding: 3px;">
 			                                                            </td>
@@ -424,7 +436,7 @@
 			                                                                <b> Total : </b>
 			                                                            </td>
 			                                                            <td align="right" style="padding:3px">
-			                                                                <b> Rp. {{ number_format($pesanan_pelanggan->subtotal + $pesanan_pelanggan->biaya_kirim ,0, ',', '.') }} </b>
+			                                                                <b> Rp. {{ number_format($pesanan_pelanggan->subtotal, 0, ',', '.') }} </b>
 			                                                            </td>
 			                                                        </tr>
 			                                                    </tbody>

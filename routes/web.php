@@ -993,6 +993,9 @@ Route::post('/pembayaran-piutang/proses-tambah-edit-tbs-pembayaran-piutang/{id}'
 Route::delete('/pembayaran-piutang/proses-hapus-edit-tbs-pembayaran-piutang/{id}', 'PembayaranPiutangController@prosesHapusEditTbsPenjualan')->middleware('auth');
 Route::get('/pembayaran-piutang/edit-pembayaran-piutang/{id}', 'PembayaranPiutangController@editPembayaranPiutang')->middleware('auth');
 Route::get('/pembayaran-piutang/cetak-pembayaran-piutang/{id}', 'PembayaranPiutangController@cetakUlang')->middleware('auth');
+Route::get('/pembayaran-piutang/template-excel', 'PembayaranPiutangController@downloadTemplate')->middleware('auth');
+Route::post('/pembayaran-piutang/import-excel/', 'PembayaranPiutangController@importExcel')->middleware('auth');
+
 
 //LAPORAN KAS DETAIL
 Route::get('/laporan-kas/pilih-kas', 'LaporanKasController@dataKas')->middleware('auth');

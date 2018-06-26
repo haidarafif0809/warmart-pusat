@@ -78,7 +78,7 @@ class PembayaranPiutang extends Model
     // DATA PEMBAYARAN PIUTANG
     public function scopeDataPembayaranPiutang($query_pembayaran_piutang)
     {
-        $query_pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.created_at', 'pembayaran_piutangs.updated_at', 'pembayaran_piutangs.created_at', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')
+        $query_pembayaran_piutang = PembayaranPiutang::select('pembayaran_piutangs.id_pembayaran_piutang as id', 'pembayaran_piutangs.no_faktur_pembayaran as no_faktur', 'pembayaran_piutangs.updated_at', 'pembayaran_piutangs.created_at', 'pembayaran_piutangs.total as total', 'kas.nama_kas as nama_kas', 'users.name as petugas', 'pembayaran_piutangs.keterangan as keterangan')
             ->leftJoin('kas', 'pembayaran_piutangs.cara_bayar', '=', 'kas.id')
             ->leftJoin('users', 'pembayaran_piutangs.created_by', '=', 'users.id')
             ->where('pembayaran_piutangs.warung_id', Auth::user()->id_warung)

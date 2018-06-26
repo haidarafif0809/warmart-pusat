@@ -339,6 +339,7 @@ export default {
             }
             axios.get(app.url + '/view?page=' + page)
             .then((resp) => {
+                console.log(resp);
                 app.warungs = resp.data.data;
                 app.warungData = resp.data;
                 app.loading = false;
