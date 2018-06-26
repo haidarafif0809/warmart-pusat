@@ -79,6 +79,8 @@
     <link href="{{ asset('css/fonts-googleapis-icon.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/collapseKeranjangBelanja.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/robotoSlab.css')}}" rel="stylesheet"/>
+
 
 
     <!-- Facebook Pixel Code -->
@@ -121,83 +123,83 @@
 </link>
 </head>
 <style type="text/css">
-    .navbar-nav .open .dropdown-menu{
-        color: grey;
-    }
-    .navbar .navbar-brand {
-        position: relative;
-        @if(Agent::isMobile())
-        height: 50px;
-        @else
-        height: 75px;
-        @endif
-        line-height: 0px;
-        color: inherit;
-        padding: 10px 15px;
-    }
-    .btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
-        border-radius: 0px;
-    }
-    body {
-        @if($setting_aplikasi->tipe_aplikasi == 1)
-        background-color: {{$tema->kode_tema}};
-        color: #3C4858;
-        @endif
-    }
-    @keyframes spinner { 
-        to {transform: rotate(360deg);} 
-    } 
-    .spinner:before { 
-        content: ''; 
-        box-sizing: border-box; 
-        position: absolute; 
-        top: 50%; 
-        left: 50%; 
-        width: 20px; 
-        height: 20px; 
-        margin-top: -10px; 
-        margin-left: -10px; 
-        border-radius: 50%; 
-        border: 2px solid #ccc; 
-        border-top-color: #333; 
-        animation: spinner .6s linear infinite; 
-    } 
-    .selectizeLoading > .selectize-input, .selectizeLoading > .selectize-input > input {
-        cursor: wait !important;
-        font-style: italic;
-        background:
-        url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif')
-        no-repeat
-        center center;
-    }
-    .marginFrom{
-        margin-bottom: 1px;
-        margin-top: 1px;
-    }
-    .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
-        margin-left: 0px;
-    }
-    .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
-        font-size: 15px;
-        padding: 6px 5px;
-        line-height: 1em;
-    }
-    .footer-big .social-feed i {
-        font-size: 23.5px;
-        display: table-cell;
-        padding-right: 10px;
-    }
-    .img-jasa{
-        padding: 0px 2px 2px;
-    }
-    .navbar, .navbar.navbar-default {
-        background-color: {{$tema->kode_tema}};
-        color: #fbf8f8;    
-    }
-    .btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
-     background-color: {{$tema->header_tema}};
-     color: {{$tema->kode_tema}};
- }
+.navbar-nav .open .dropdown-menu{
+    color: grey;
+}
+.navbar .navbar-brand {
+    position: relative;
+    @if(Agent::isMobile())
+    height: 50px;
+    @else
+    height: 75px;
+    @endif
+    line-height: 0px;
+    color: inherit;
+    padding: 10px 15px;
+}
+.btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
+    border-radius: 0px;
+}
+body {
+    @if($setting_aplikasi->tipe_aplikasi == 1)
+    background-color: {{$tema->kode_tema}};
+    color: #3C4858;
+    @endif
+}
+@keyframes spinner { 
+    to {transform: rotate(360deg);} 
+} 
+.spinner:before { 
+    content: ''; 
+    box-sizing: border-box; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    width: 20px; 
+    height: 20px; 
+    margin-top: -10px; 
+    margin-left: -10px; 
+    border-radius: 50%; 
+    border: 2px solid #ccc; 
+    border-top-color: #333; 
+    animation: spinner .6s linear infinite; 
+} 
+.selectizeLoading > .selectize-input, .selectizeLoading > .selectize-input > input {
+    cursor: wait !important;
+    font-style: italic;
+    background:
+    url('http://www.hsi.com.hk/HSI-Net/pages/images/en/share/ajax-loader.gif')
+    no-repeat
+    center center;
+}
+.marginFrom{
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: 0px;
+}
+.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+    font-size: 15px;
+    padding: 6px 5px;
+    line-height: 1em;
+}
+.footer-big .social-feed i {
+    font-size: 23.5px;
+    display: table-cell;
+    padding-right: 10px;
+}
+.img-jasa{
+    padding: 0px 2px 2px;
+}
+.navbar, .navbar.navbar-default {
+    background-color: {{$tema->kode_tema}};
+    color: #fbf8f8;    
+}
+.btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
+ background-color: {{$tema->header_tema}};
+ color: #100202f2;
+}
 </style>
 <body class="ecommerce-page">
     @if(Agent::isMobile())
@@ -407,18 +409,18 @@
                         @if (Auth::check() == false && !Agent::isMobile()) 
                         <li class="button-container">
                             @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
-                                <a id="btnKeranjang" class="btn btn-round btn-rose">
-                                    <i class="material-icons">
-                                        shopping_cart
-                                    </i>
-                                    Keranjang Belanja
-                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                        | {{ $cek_belanjaan }}
-                                    </b>
-                                </a>
-                                <div id="collapseKeranjangBelanja">
-                                    <div id="containerTable"></div>
-                                </div>
+                            <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                            <div id="collapseKeranjangBelanja">
+                                <div id="containerTable"></div>
+                            </div>
                             @else
                             <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
                                 <i class="material-icons">
@@ -434,18 +436,18 @@
                         @elseif(Auth::check() && Auth::user()->tipe_user == 3 && !Agent::isMobile())
                         <li class="button-container">
                             @if ($settingCollapseDiWarung->collapse_keranjang_belanja == 1)
-                                <a id="btnKeranjang" class="btn btn-round btn-rose">
-                                    <i class="material-icons">
-                                        shopping_cart
-                                    </i>
-                                    Keranjang Belanja
-                                    <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
-                                        | {{ $cek_belanjaan }}
-                                    </b>
-                                </a>
-                                <div id="collapseKeranjangBelanja">
-                                    <div id="containerTable"></div>
-                                </div>
+                            <a id="btnKeranjang" class="btn btn-round btn-rose">
+                                <i class="material-icons">
+                                    shopping_cart
+                                </i>
+                                Keranjang Belanja
+                                <b style="font-size: 15px" id="jumlah-keranjang" data-session="" data-jumlah="{{ $cek_belanjaan }}">
+                                    | {{ $cek_belanjaan }}
+                                </b>
+                            </a>
+                            <div id="collapseKeranjangBelanja">
+                                <div id="containerTable"></div>
+                            </div>
                             @else
                             <a class="btn btn-round btn-rose" href="{{ url('/keranjang-belanja') }}">
                                 <i class="material-icons">
@@ -795,12 +797,30 @@
 
                 /* cek apakah id keranjangCollapseMobile ada */
                 if ($('#keranjangCollapseMobile').attr('class') != undefined) {
+
+                    /* cek apakah kelas bgAnimation ada atau tidak */
                     if ($('#keranjangCollapseMobile').attr('class').match(/bgAnimation/) != null) {
                         $('#keranjangCollapseMobile').removeClass('bgAnimation');
                     }
+
+                    swal({
+                        title: 'Berhasil!',
+                        type: 'success',
+                        text: 'Berhasil menambahkan produk ke keranjang belanja.',
+                        showConfirmButton: false
+                    })
+                    .then(() => {
+                        setTimeout(() => {
+                            $('#keranjangCollapseMobile').addClass('bgAnimation');
+                        }, 300);
+                    })
+                    .catch((resp) => {
+                        console.log('catch tambah produk: ', resp);
+                    });
+
                     setTimeout(() => {
-                        $('#keranjangCollapseMobile').addClass('bgAnimation');
-                    }, 300);
+                        swal.clickConfirm();
+                    }, 1800);
 
                     $.get('{{ url('/keranjang-belanja/collapse-keranjang-belanja-mobile') }}', function (data) {
                         collapseDataProdukMobile = data;
@@ -813,7 +833,22 @@
                         collapseDataProduk = data;
                     })
                     .always(() => {
-                        getRemoveDataCollapse(['get', 'desktop']);
+                        swal({
+                            title: 'Berhasil!',
+                            type: 'success',
+                            text: 'Berhasil menambahkan produk ke keranjang belanja.',
+                            showConfirmButton: false
+                        })
+                        .then(() => {
+                            getRemoveDataCollapse(['get', 'desktop']);
+                        })
+                        .catch((resp) => {
+                            console.log('catch tambah produk: ', resp);
+                        });
+
+                        setTimeout(() => {
+                            swal.clickConfirm();
+                        }, 1800);
                     });
                 }
             });

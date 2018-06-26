@@ -166,7 +166,7 @@ class PenjualanPos extends Model
 
     public function scopeQueryCetak($query, $id)
     {
-        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 'p.name AS pelanggan', 'u.name AS kasir', 'penjualan_pos.potongan AS potongan', 'penjualan_pos.total AS total', 'penjualan_pos.tunai AS tunai', 'penjualan_pos.kembalian AS kembalian', DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'w.no_telpon AS no_telp_warung', 'penjualan_pos.id AS id', 'p.alamat AS alamat_pelanggan', 'penjualan_pos.status_penjualan AS status_penjualan', 'kas.nama_kas AS nama_kas', 'penjualan_pos.pelanggan_id AS pelanggan_id')
+        $query->select('w.name AS nama_warung', 'w.alamat AS alamat_warung', 'p.name AS pelanggan', 'u.name AS kasir', 'penjualan_pos.potongan AS potongan', 'penjualan_pos.total AS total', 'penjualan_pos.tunai AS tunai', 'penjualan_pos.kembalian AS kembalian', DB::raw('DATE_FORMAT(penjualan_pos.created_at, "%d/%m/%Y %H:%i:%s") as waktu_jual'), 'w.no_telpon AS no_telp_warung', 'penjualan_pos.id AS id', 'p.alamat AS alamat_pelanggan', 'penjualan_pos.status_penjualan AS status_penjualan', 'kas.nama_kas AS nama_kas', 'penjualan_pos.pelanggan_id AS pelanggan_id', 'penjualan_pos.tanggal_jt_tempo AS tanggal_jt_tempo',DB::raw('DATE_FORMAT(penjualan_pos.tanggal_jt_tempo, "%d/%m/%Y") as jatuh_tempo'))
         ->leftJoin('warungs AS w', 'penjualan_pos.warung_id', '=', 'w.id')
         ->leftJoin('users AS u', 'u.id', '=', 'penjualan_pos.created_by')
         ->leftJoin('users AS p', 'p.id', '=', 'penjualan_pos.pelanggan_id')

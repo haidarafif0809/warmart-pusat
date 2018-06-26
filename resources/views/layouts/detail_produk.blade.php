@@ -55,6 +55,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
   <link href="{{ asset('assets/assets-for-demo/vertical-nav.css')}}" rel="stylesheet"/>
   <link href="{{ asset('css/fonts-googleapis-roboto.css') }}" rel="stylesheet" type="text/css"/>
   <link href="{{ asset('css/font-awesome.min.css')}}" rel="stylesheet"/>
+  <link href="{{ asset('css/robotoSlab.css')}}" rel="stylesheet"/>
   {!! SEOMeta::generate() !!}
   {!! OpenGraph::generate() !!}
   {!! Twitter::generate() !!}
@@ -66,124 +67,125 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
 </head>
 <style type="text/css">
 
-  .navbar .navbar-brand {
-    position: relative;
-    @if(Agent::isMobile())
-    height: 50px;
-    @else
-    height: 75px;
-    @endif
-    line-height: 0px;
-    color: inherit;
-    padding: 10px 15px;
-  }
 
-  .list-produk {
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-  .product-page .page-header .container {
-    padding-top: 10vh;
-  }
-  .product-page .main-raised {
-    padding-top: 0%;
-  }
-  .product-page .related-products .title {
-    margin-bottom: 1px;
-  }
-  .product-page h2.title {
-    margin-bottom: 0px;
-    margin-top: 0px;
-  }
+.navbar .navbar-brand {
+  position: relative;
+  @if(Agent::isMobile())
+  height: 50px;
+  @else
+  height: 75px;
+  @endif
+  line-height: 0px;
+  color: inherit;
+  padding: 10px 15px;
+}
 
-  .card .card-image{
-    height: auto; /*this makes sure to maintain the aspect ratio*/
-    margin-top: 5px;
-  }
-  .img-produk{
-    border-radius: 15px;
-    margin-top: 10px;
-  }
-  p {
-    margin: 0 0 0px;
-  }
-  .card-pricing {
-    margin-bottom: 0px;
-  }
-  .tombolBeli {
-    padding: 10px 0px;
-    margin:0px;
-  }
-  .card-pricing .card-content {
-    padding: 5px !important;
-  }
-  .card .footer {
-    margin-top: 0px;
-    font-family: Helvetica,Arial,sans-serif;
-    font-weight: 400;
-    line-height:1.2em;
-    text-decoration: none;
-    font-size:15px;
-  }
+.list-produk {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.product-page .page-header .container {
+  padding-top: 10vh;
+}
+.product-page .main-raised {
+  padding-top: 0%;
+}
+.product-page .related-products .title {
+  margin-bottom: 1px;
+}
+.product-page h2.title {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
 
-  @font-face {
-    font-family: "San Francisco";
-    font-weight: 200;
-    src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
-  }
-  .flexFont {
-    @if(Agent::isMobile())
-    height:4em;
-    @else
-    height:3em;
-    @endif
-    padding:1%;
-    margin: 5px;
+.card .card-image{
+  height: auto; /*this makes sure to maintain the aspect ratio*/
+  margin-top: 5px;
+}
+.img-produk{
+  border-radius: 15px;
+  margin-top: 10px;
+}
+p {
+  margin: 0 0 0px;
+}
+.card-pricing {
+  margin-bottom: 0px;
+}
+.tombolBeli {
+  padding: 10px 0px;
+  margin:0px;
+}
+.card-pricing .card-content {
+  padding: 5px !important;
+}
+.card .footer {
+  margin-top: 0px;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  line-height:1.2em;
+  text-decoration: none;
+  font-size:15px;
+}
 
-  }
-  .btnWarung {
-    padding:1%;
-    margin: 0px;
-  }
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 200;
+  src: url("//applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff2");
+}
+.flexFont {
+  @if(Agent::isMobile())
+  height:4em;
+  @else
+  height:3em;
+  @endif
+  padding:1%;
+  margin: 5px;
 
-  .smaller {
-    font-size: 0.7em;
-    background-color:red;
-    width: 10em;
-  }
-  .buttonColor{
-    @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
-    background-color: {{$tema->kode_tema}};
-    @else
-    background-color: #01573e;
-    @endif
-  }
-  .btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
-    font-size: 15px;
-    padding: 6px 5px;
-    line-height: 1em;
-  }
+}
+.btnWarung {
+  padding:1%;
+  margin: 0px;
+}
 
-  .footer-big .social-feed i {
-    font-size: 23.5px;
-    display: table-cell;
-    padding-right: 10px;
-  }
-  .img-jasa{
-    padding: 0px 2px 2px;
-  }
-  .zoom:hover {
-    -ms-transform: scale(1.5);
-    -webkit-transform: scale(1.5);
-    transform: scale(1.5); 
-  }  
-  .btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
-    border-radius: 0px;
-  }
-  .btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
-   background-color: {{$tema->header_tema}};
-   color: {{$tema->kode_tema}};
- }
+.smaller {
+  font-size: 0.7em;
+  background-color:red;
+  width: 10em;
+}
+.buttonColor{
+  @if($setting_aplikasi->tipe_aplikasi == "1") /*tipe-aplikasi == 1, aplikasi topos*/
+  background-color: {{$tema->kode_tema}};
+  @else
+  background-color: #01573e;
+  @endif
+}
+.btn.btn-just-icon, .navbar .navbar-nav > li > a.btn.btn-just-icon {
+  font-size: 15px;
+  padding: 6px 5px;
+  line-height: 1em;
+}
+
+.footer-big .social-feed i {
+  font-size: 23.5px;
+  display: table-cell;
+  padding-right: 10px;
+}
+.img-jasa{
+  padding: 0px 2px 2px;
+}
+.zoom:hover {
+  -ms-transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5); 
+}  
+.btn.btn-round, .navbar .navbar-nav > li > a.btn.btn-round {
+  border-radius: 0px;
+}
+.btn.btn-rose, .btn.btn-rose:hover, .btn.btn-rose:focus, .btn.btn-rose:active, .btn.btn-rose.active, .btn.btn-rose:active:focus, .btn.btn-rose:active:hover, .btn.btn-rose.active:focus, .btn.btn-rose.active:hover, .open > .btn.btn-rose.dropdown-toggle, .open > .btn.btn-rose.dropdown-toggle:focus, .open > .btn.btn-rose.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-rose, .navbar .navbar-nav > li > a.btn.btn-rose:hover, .navbar .navbar-nav > li > a.btn.btn-rose:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active, .navbar .navbar-nav > li > a.btn.btn-rose.active, .navbar .navbar-nav > li > a.btn.btn-rose:active:focus, .navbar .navbar-nav > li > a.btn.btn-rose:active:hover, .navbar .navbar-nav > li > a.btn.btn-rose.active:focus, .navbar .navbar-nav > li > a.btn.btn-rose.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-rose.dropdown-toggle:hover {
+ background-color: {{$tema->header_tema}};
+ color: #100202f2;
+}
 </style>
 <body class="product-page">
   @if(Agent::isMobile())
@@ -633,7 +635,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
     <div class="content">
       <div class="row">
         <div class="col-md-3">
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Tentang Kami
           </h5>
           @if($setting_aplikasi->tipe_aplikasi == 0)
@@ -648,7 +650,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
           @endif
         </div>
         <div class="col-md-3">
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Hubungi Kami
           </h5>
           <div class="social-feed">
@@ -689,7 +691,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
           @if(Agent::isMobile())
           <div class="row">
             <div class="col-xs-6">
-              <h5 style="font-size: 14px; mar">
+              <h5 class="robotoSlab" style="font-size: 14px; mar">
                 Ikuti Kami Di
               </h5>
               <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -715,7 +717,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
             </div>
 
             <div class="col-xs-6">
-              <h5 style="font-size: 14px; mar">
+              <h5 class="robotoSlab" style="font-size: 14px; mar">
                 Download Apps
               </h5>
               <a href="<?=$settingFooter->play_store;?>">
@@ -726,7 +728,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
 
           @else
 
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Ikuti Kami Di
           </h5>
           <button class="btn btn-just-icon btn-xs btn-facebook" style="margin : 0px">
@@ -749,7 +751,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
               <i class="fa fa-google-plus"> </i>
             </a> 
           </button>
-          <h5 style="font-size: 14px; mar">
+          <h5 class="robotoSlab" style="font-size: 14px; mar">
             Download Apps
           </h5>
           <a href="<?=$settingFooter->play_store;?>">
@@ -760,7 +762,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
         <div class="col-md-3">
           <div class="row" style="padding-left: 15px">
             <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-              <h5 style="font-size: 14px;" class="pull-left">
+              <h5 class="robotoSlab" style="font-size: 14px;" class="pull-left">
                 Jasa Pengiriman
               </h5>
             </div>
@@ -773,7 +775,7 @@ $tema = \App\TemaWarna::where('default_tema', 1)->where('warung_id',$address_app
             @endforeach
 
             <div class="col-md-12 col-xs-12" style="padding-left: 0px">
-              <h5 style="font-size: 14px;" class="pull-left">
+              <h5 class="robotoSlab" style="font-size: 14px;" class="pull-left">
                 Metode Pembayaran
               </h5>
             </div>

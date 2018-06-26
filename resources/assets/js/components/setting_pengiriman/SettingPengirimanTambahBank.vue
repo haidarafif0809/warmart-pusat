@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><router-link :to="{name: 'indexDashboard'}">Home</router-link></li>
-                <li><router-link :to="{name: 'indexSettingPengiriman'}">Setting Pengiriman</router-link></li>
+                <li><router-link :to="{name: 'indexSettingPengiriman', params: {tab: 'bankTransfer'}}">Setting Pengiriman</router-link></li>
                 <li class="active">Tambah Bank Transfer</li>
             </ul>
             <div class="card">
@@ -61,67 +61,70 @@
             </div>
         </div>
     </div>
-
 </template>
 <script>
-	export default {
-		mounted() {
-
-		},
-		data: function () {
-			return {
-				url_gambar_bank: window.location.origin+(window.location.pathname).replace("dashboard", "jasa_pengiriman"),
-				url_origin: window.location.origin+(window.location.pathname).replace("dashboard", ""),
-				url: window.location.origin+(window.location.pathname).replace("dashboard", "setting-pengiriman"),
-				bank_transfer: {
-					nama_bank: '',
-					logo_bank: '',
-					tampilkan_bank: ''
-				}
+export default {
+	data: function () {
+		return {
+			url_gambar_bank: window.location.origin + (window.location.pathname).replace("dashboard", "jasa_pengiriman"),
+			url_origin: window.location.origin + (window.location.pathname).replace("dashboard", ""),
+			url: window.location.origin + (window.location.pathname).replace("dashboard", "setting-pengiriman"),
+			bank_transfer: {
+				nama_bank: '',
+				logo_bank: '',
+				tampilkan_bank: ''
 			}
-		},
-		watch: {
-			'bank_transfer.tampilkan_bank': function (val) {
-				console.log(val);
+		}
+	},
+	methods: {
+		saveForm() {
+			var app = this;
+			var newBankTransfer = new FormData();
+
+			if (document.getElementById('logo_bank').files[0] != undefined) {
+				newBankTransfer.append('logo_bank', document.getElementById('logo_bank').files[0]);
 			}
-		},
-		methods: {
-			saveForm() {
-				var app = this;
-				var newBankTransfer = new FormData();
-				if (document.getElementById('logo_bank').files[0] != undefined) {
-					newBankTransfer.append('logo_bank', document.getElementById('logo_bank').files[0]);
-				}
-				newBankTransfer.append('nama_bank', app.bank_transfer.nama_bank);
+			newBankTransfer.append('nama_bank', app.bank_transfer.nama_bank);
 
-				if (app.bank_transfer.tampilkan_bank == '') {
-					newBankTransfer.append('tampilkan_bank', 0);
-				} else {
-					newBankTransfer.append('tampilkan_bank', app.bank_transfer.tampilkan_bank);
-				}
+			if (app.bank_transfer.tampilkan_bank == '') {
+				newBankTransfer.append('tampilkan_bank', 0);
+			} else {
+				newBankTransfer.append('tampilkan_bank', app.bank_transfer.tampilkan_bank);
+			}
 
-				axios.post(app.url + '/tambah-bank-transfer', newBankTransfer)
-				.then((resp) => {
-					console.log('then:', resp);
-					swal({
-						title: 'Berhasil!',
-						type: 'success',
-						showConfirmButton: false,
-						text: 'Berhasil Menambah Bank Transfer.',
-						timer: 1800
-					});
+			axios.post(app.url + '/tambah-bank-transfer', newBankTransfer)
+			.then((resp) => {
+				swal({
+					title: 'Berhasil!',
+					type: 'success',
+					showConfirmButton: false,
+					text: 'Berhasil Menambah Bank Transfer.',
+				})
+				.then(() => {
+					app.$router.replace('/setting-pengiriman');
+
+					// kirim bankTransfer sebagai parameter untuk diproses di halaman index setting pengiriman
+					app.$route.params.tab = 'bankTransfer';
 				})
 				.catch((resp) => {
-					console.log('catch:', resp);					
-					swal({
-						title: 'Gagal!',
-						type: 'warning',
-						showConfirmButton: false,
-						text: 'Gagal Menambahkan Bank Transfer.',
-						timer: 2000
-					});
+					console.log('catch edit bank: ', resp);
 				});
-			}	
+
+				setTimeout(() => {
+					swal.clickConfirm();
+				}, 1800);
+			})
+			.catch((resp) => {
+				console.log('catch:', resp);					
+				swal({
+					title: 'Gagal!',
+					type: 'warning',
+					showConfirmButton: false,
+					text: 'Gagal Menambahkan Bank Transfer.',
+					timer: 2000
+				});
+			});
 		}
 	}
+}
 </script>
