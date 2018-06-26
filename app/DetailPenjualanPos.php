@@ -518,4 +518,6 @@ class DetailPenjualanPos extends Model
         return $query_download;
     }
 
+
+
 }

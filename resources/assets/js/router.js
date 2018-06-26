@@ -228,6 +228,13 @@ import ReturPembelianDetail from './components/retur_pembelian/ReturPembelianDet
 import ReturPembelianProsesEdit from './components/retur_pembelian/ReturPembelianProsesEdit.vue';
 import ReturPembelianEdit from './components/retur_pembelian/ReturPembelianEdit.vue';
 
+//RETUR PENJUALAN
+import ReturPenjualanIndex from './components/retur_penjualan/ReturPenjualanIndex.vue';
+import ReturPenjualanCreate from './components/retur_penjualan/ReturPenjualanCreate.vue';
+import ReturPenjualanDetail from './components/retur_penjualan/ReturPenjualanDetail.vue';
+import ReturPenjualanEdit from './components/retur_penjualan/ReturPenjualanEdit.vue';
+import ReturPenjualanProsesEdit from './components/retur_penjualan/ReturPenjualanProsesEdit.vue';
+
 
 const routes = [{
     path: '/',
@@ -907,6 +914,29 @@ const routes = [{
         path: '/create-tema', 
         component: ColorThemeCreate, 
         name: 'createColorTheme'
+    },
+    //RETUR PENJUALAN
+    {
+        path: '/retur-penjualan',
+        component: ReturPenjualanIndex,
+        name: 'indexReturPenjualan'
+    }, {
+        path: '/detail-retur-penjualan/:id',
+        component: ReturPenjualanDetail,
+        name: 'detailReturPenjualan'
+    }, {
+        path: '/create-retur-penjualan',
+        component: ReturPenjualanCreate,
+        name: 'createReturPenjualan'
+    }, {
+        path: '/edit-retur-penjualan/:id',
+        component: ReturPenjualanEdit,
+        name: 'editReturPenjualan'
+    }, {
+        path: '/proses-edit-retur-penjualan/:id',
+        component: ReturPenjualanProsesEdit,
+        name: 'prosesEditReturPenjualan'
+    },
     }, {
         path: '/retur-pembelian',
         component: ReturPembelianIndex,
