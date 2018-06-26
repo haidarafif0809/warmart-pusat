@@ -14,6 +14,7 @@
  import Vue from 'vue'
  import money from 'v-money'
  import VueTour from 'vue-tour'
+ import VueClipboard from 'vue-clipboard2'
 
 // require styles
 import 'quill/dist/quill.core.css'
@@ -39,6 +40,8 @@ Vue.use(ToggleButton)
 Vue.use(VueFroala)
 Vue.use(quillEditor)
 Vue.use(VueTour)
+Vue.use(VueClipboard);
+
 // register directive v-money and component <money>
 Vue.use(money, {
 	precision: 4

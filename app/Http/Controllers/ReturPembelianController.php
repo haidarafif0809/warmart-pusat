@@ -17,12 +17,37 @@ use App\TransaksiHutang;
 use App\SatuanKonversi;
 use App\SettingAplikasi;
 use Auth;
+use Laratrust;
 
 class ReturPembelianController extends Controller
 {
 
     public function dataRetur($id){
         return $retur_pembelian = ReturPembelian::find($id);
+    }
+
+    public function otoritasReturPembelian(){
+
+        if (Laratrust::can('tambah_retur_pembelian')) {
+            $tambah_retur_pembelian = 1;
+        }else{
+            $tambah_retur_pembelian = 0;
+        }
+        if (Laratrust::can('edit_retur_pembelian')) {
+            $edit_retur_pembelian = 1;
+        }else{
+            $edit_retur_pembelian = 0;
+        }
+        if (Laratrust::can('hapus_retur_pembelian')) {
+            $hapus_retur_pembelian = 1;
+        }else{
+            $hapus_retur_pembelian = 0;
+        }
+        $respons['tambah_retur_pembelian']  = $tambah_retur_pembelian;
+        $respons['edit_retur_pembelian']    = $edit_retur_pembelian;
+        $respons['hapus_retur_pembelian']   = $hapus_retur_pembelian;
+
+        return response()->json($respons);
     }
 
     public function supplier(){
@@ -117,14 +142,14 @@ class ReturPembelianController extends Controller
         foreach ($data_pembelians as $data_pembelian) {
             $data_hutangs = TransaksiHutang::hutangTerbayar($no_faktur_retur, $data_pembelian->id_transaksi)->get();
 
-            foreach ($data_hutangs as $data_hutang) {                
+            foreach ($data_hutangs as $data_hutang) {
                 $hutang = $data_hutang->jumlah_keluar + $data_pembelian->sisa_hutang;
             }
 
             array_push($array, [
                 'no_faktur' => $data_pembelian->no_faktur,
                 'hutang'    => $hutang,
-                ]); 
+                ]);
         }
 
         $array_faktur = [];
@@ -179,6 +204,7 @@ class ReturPembelianController extends Controller
         //DATA PAGINATION
         $respons['current_page']   = $retur_pembelian->currentPage();
         $respons['data']           = $array;
+        $respons['otoritas']       = $this->otoritasReturPembelian();
         $respons['no_faktur']      = $no_faktur;
         $respons['first_page_url'] = url($url . '?page=' . $retur_pembelian->firstItem());
         $respons['from']           = 1;
@@ -240,7 +266,7 @@ class ReturPembelianController extends Controller
 
     public function cekPotongan($potongan, $harga_produk, $jumlah_produk)
     {
-        $cek_potongan = substr_count($potongan, '%'); 
+        $cek_potongan = substr_count($potongan, '%');
         // UNTUK CEK APAKAH ADA STRING "%" atau maksudnya untuk cek apakah pot. dalam bentuk persen atau tidak
 
         // JIKA POTONGAN TIDAK DALAM BENTUK PERSEN
@@ -319,10 +345,10 @@ class ReturPembelianController extends Controller
                 'no_faktur_retur'   => $returPembelian->no_faktur_retur,
                 'waktu'             => $returPembelian->Waktu,
                 'suplier'           => $returPembelian->nama_suplier,
-                'total'             => $returPembelian->total,
-                'total_bayar'       => $returPembelian->total_bayar,
-                'potong_hutang'     => $returPembelian->potong_hutang,
-                'potongan'     => $returPembelian->potongan,
+                'total'             => (float)$returPembelian->total,
+                'total_bayar'       => (float)$returPembelian->total_bayar,
+                'potong_hutang'     => (float)$returPembelian->potong_hutang,
+                'potongan'          => (float)$returPembelian->potongan,
                 ]);
         }
         $no_faktur_retur = "";
@@ -347,10 +373,10 @@ class ReturPembelianController extends Controller
                 'no_faktur_retur'   => $returPembelian->no_faktur_retur,
                 'waktu'             => $returPembelian->Waktu,
                 'suplier'           => $returPembelian->nama_suplier,
-                'total'             => $returPembelian->total,
-                'total_bayar'       => $returPembelian->total_bayar,
-                'potong_hutang'     => $returPembelian->potong_hutang,
-                'potongan'     => $returPembelian->potongan,
+                'total'             => (float)$returPembelian->total,
+                'total_bayar'       => (float)$returPembelian->total_bayar,
+                'potong_hutang'     => (float)$returPembelian->potong_hutang,
+                'potongan'          => (float)$returPembelian->potongan,
                 ]);
         }
         $no_faktur_retur = "";
@@ -415,7 +441,7 @@ class ReturPembelianController extends Controller
 
         $tbs_retur = TbsReturPembelian::dataTransaksiTbsReturPembelian($session_id, $user_warung)
         ->orderBy('tbs_retur_pembelians.id_tbs_retur_pembelian', 'desc')->paginate(10);
-        
+
         $db = "App\TbsReturPembelian";
         $array = $this->foreachTbs($tbs_retur, $session_id, $db);
 
@@ -428,7 +454,7 @@ class ReturPembelianController extends Controller
 
     // VIEW EDIT TBS
     public function viewEditTbs($id)
-    {   
+    {
         $retur_pembelian    = ReturPembelian::find($id);
         $no_faktur_retur    = $retur_pembelian->no_faktur_retur;
         $session_id         = session()->getId();
@@ -436,7 +462,7 @@ class ReturPembelianController extends Controller
 
         $tbs_retur = EditTbsReturPembelian::dataTransaksiEditTbsReturPembelian($session_id, $no_faktur_retur, $user_warung)
         ->orderBy('edit_tbs_retur_pembelians.id_edit_tbs_retur_pembelian', 'desc')->paginate(10);
-        
+
         $db = "App\EditTbsReturPembelian";
         $array = $this->foreachTbs($tbs_retur, $session_id, $db);
 
@@ -461,7 +487,7 @@ class ReturPembelianController extends Controller
             ->orwhere('barangs.kode_barang', 'LIKE', '%' . $search . '%')
             ->orwhere('satuans.nama_satuan', 'LIKE', '%' . $search . '%');
         })->orderBy('tbs_retur_pembelians.id_tbs_retur_pembelian', 'desc')->paginate(10);
-        
+
         $db = "App\TbsReturPembelian";
         $array = $this->foreachTbs($tbs_retur, $session_id, $db);
 
@@ -529,7 +555,7 @@ class ReturPembelianController extends Controller
         $no_faktur   = '';
         $warung_id = Auth::user()->id_warung;
 
-        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)        
+        $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)
         ->groupBy('detail_pembelians.id_produk')
         ->orderBy('pembelians.created_at', 'asc')
         ->paginate(10);
@@ -553,7 +579,7 @@ class ReturPembelianController extends Controller
     public function pencarianDataPembelian(Request $request)
     {
         $no_faktur   = '';
-        $warung_id = Auth::user()->id_warung;        
+        $warung_id = Auth::user()->id_warung;
         $search = $request->search;
 
         $pembelians = Pembelian::dataPembelian($request->supplier, $warung_id)
@@ -1041,7 +1067,7 @@ class ReturPembelianController extends Controller
                                     'suplier_id'      => $supplier,
                                     'warung_id'       => $warung_id,
                                     ]);
-                                
+
                                 $subtotal_akhir = 0;
                             }elseif ($subtotal_akhir > $sisa_hutang) {
 
@@ -1053,7 +1079,7 @@ class ReturPembelianController extends Controller
                                     'suplier_id'      => $supplier,
                                     'warung_id'       => $warung_id,
                                     ]);
-                                
+
                                 $subtotal_akhir = $subtotal_akhir - $sisa_hutang;
                             }elseif ($subtotal_akhir < $sisa_hutang) {
 
@@ -1065,7 +1091,7 @@ class ReturPembelianController extends Controller
                                     'suplier_id'      => $supplier,
                                     'warung_id'       => $warung_id,
                                     ]);
-                                
+
                                 $subtotal_akhir = 0;
                             }
                         } /*END FOREACH*/
@@ -1365,7 +1391,7 @@ class ReturPembelianController extends Controller
 
     }
 
-    public function prosesEditRetur($id) {        
+    public function prosesEditRetur($id) {
         $session_id                 = session()->getId();
         $retur_pembelian            = ReturPembelian::find($id);
         $detail_retur_pembelians    = DetailReturPembelian::where('no_faktur_retur', $retur_pembelian->no_faktur_retur)->where('warung_id', Auth::user()->id_warung);

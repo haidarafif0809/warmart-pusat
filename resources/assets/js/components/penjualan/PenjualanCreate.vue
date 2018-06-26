@@ -390,42 +390,6 @@
 <!--    end small modal -->
 
 <!-- small modal -->
-<div class="modal" id="modalJumlahProduk" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-medium">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close"  v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()"> &times;</button> 
-      </div>
-
-      <form class="form-horizontal" v-on:submit.prevent="submitProdukPenjualan(inputTbsPenjualan.jumlah_produk)"> 
-        <div class="modal-body">
-          <h3 class="text-center"><b>{{inputTbsPenjualan.nama_produk}}</b></h3>
-
-          <div class="form-group">
-            <div class="col-md-7 col-xs-7">
-              <input class="form-control" type="number" v-model="inputTbsPenjualan.jumlah_produk" placeholder="Isi Jumlah Produk" name="jumlah_produk" id="jumlah_produk" ref="jumlah_produk" autocomplete="off" step="0.01">
-            </div>
-
-            <div class="col-md-5 col-xs-5 hurufBesar">
-              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
-                <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
-              </selectize-component>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
-          <button type="submit" class="btn btn-info">Tambah</button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-<!--    end small modal -->
-
-<!-- small modal -->
 <div class="modal" id="modalSimpanPenjualan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-medium">
     <div class="modal-content">
@@ -437,23 +401,32 @@
         <div class="modal-body">
           <h3 class="text-center"><b>Simpan Penjualan</b></h3>
 
-          <div class="form-group">
-            <div class="col-md-12 col-xs-12 hurufBesar">
-              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
-                <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
+          <div class="col-md-10 col-xs-10">
+            <div class="form-group" style="margin-right: 10px; margin-left: 10px;"> <br>
+              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelangganAntrian" ref='pelangganAntrian'> 
+                    <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
               </selectize-component>
             </div>
           </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
-          <button type="submit" class="btn btn-info">Simpan</button>
-        </div>
-      </form>
+          <div class="col-md-1 col-xs-1" style="padding-left:0px">
+           <div class="form-group">
+            <div class="row" style="margin-top:11px">
+              <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalPelanggan()" type="button"> <i class="material-icons" >add</i> </button>
+            </div>
+           </div>
+          </div>
 
-    </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-simple" v-on:click="closeModalJumlahProduk()" v-shortkey.push="['f9']" @shortkey="closeModalJumlahProduk()">Close(F9)</button>
+        <button type="submit" class="btn btn-info">Simpan</button>
+      </div>
+    </form>
+
   </div>
+</div>
 </div>
 <!--    end small modal -->
 
@@ -472,7 +445,7 @@
           <div class="form-group">
 
             <div class="col-md-12 col-xs-12 hurufBesar">
-              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuan" name="satuan" ref='satuan'> 
+              <selectize-component v-model="inputTbsPenjualan.satuan_produk" :settings="placeholder_satuan" id="satuanEdit" name="satuan" ref='satuan'> 
                 <option v-for="satuans, index in satuan" v-bind:value="satuans.satuan" class="pull-left">{{ satuans.nama_satuan }}</option>
               </selectize-component>
             </div>
@@ -504,7 +477,7 @@
           <div class="form-group">
 
             <div class="col-md-12 col-xs-12 hurufBesar">
-              <selectize-component :settings="hargaJual" v-model="inputTbsPenjualan.level_harga_produk" id="setting_harga_jual" ref='setting_harga_jual'> 
+              <selectize-component :settings="hargaJual" v-model="inputTbsPenjualan.level_harga_produk" id="setting_harga_jual_edit" ref='setting_harga_jual'> 
                 <option v-bind:value="1">Harga Jual 1</option>
                 <option v-bind:value="2">Harga Jual 2</option>
               </selectize-component>
@@ -521,6 +494,40 @@
   </div>
 </div>
 <!--    end small modal -->
+
+
+<!--Modal tambah Pelanggan -->
+<div class="modal" id="modalTambahPelanggan" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-medium">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" v-on:click="closeModalTambahPelanggan()"> &times;</button> 
+      </div>
+
+      <form class="form-horizontal" v-on:submit.prevent="submitTambahPelanggan()"> 
+        <div class="modal-body">
+          <h3 class="text-center"><b>Tambah Pelanggan  </b></h3>
+
+            <form-tambah-pelanggan :data="tambahPelanggan" :errors="errors"> </form-tambah-pelanggan> 
+
+            <div class="form-group">
+                <datepicker :input-class="'form-control'" placeholder="Tanggal Lahir" v-model="tambahPelanggan.tgl_lahir" name="uniquename" v-bind:id="'tanggal_lahir'">
+                </datepicker>
+                <span v-if="errors.tgl_lahir" id="tgl_lahir_error" class="label label-danger">{{ errors.tgl_lahir[0] }}</span>
+            </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-simple" v-on:click="closeModalTambahPelanggan()">Close</button>
+        <button id="btnTambahPelanggan" type="submit" class="btn btn-info">Submit </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+</div>
+<!--Modal tambah Pelanggan -->
 
 <div class="card" style="margin-bottom: 1px; margin-top: 1px;">
   <div class="card-content">
@@ -632,7 +639,7 @@
                 <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><b>Bayar(F2)</b> </button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "><b>Simpan</b></button>
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()"><b>Simpan</b></button>
               </div>
               <div class="col-md-4 col-xs-4">
                 <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
@@ -714,7 +721,6 @@ export default {
         placeholder: '--PILIH PELANGGAN (F4)--',
         sortField: 'text',
         openOnFocus : true
-
       },
       placeholder_kas: {
         placeholder: '--PILIH KAS--',
@@ -729,6 +735,16 @@ export default {
         nama_kas : '',
         status_kas : 0,
         default_kas : 0
+      },
+      tambahPelanggan : {
+        name: '',
+        no_telp: '',
+        kode_customer : '',
+        password : '',
+        email: '',
+        alamat: '',
+        tgl_lahir: '',
+        komunitas: '',
       },
       session:'',
       pencarian: '',
@@ -801,9 +817,13 @@ export default {
     openSelectizeProduk(){      
       this.$refs.produk.$el.selectize.focus();
     },
-    openSelectizePelanggan(){      
-      this.$refs.pelanggan.$el.selectize.setValue("");
-      this.$refs.pelanggan.$el.selectize.focus();
+    openSelectizePelanggan(){    
+      this.$refs.pelanggan.$el.selectize.setValue("")      
+      this.$refs.pelanggan.$el.selectize.focus()
+    },
+    openSelectizePelangganAntrian(){    
+      this.$refs.pelangganAntrian.$el.selectize.setValue("")      
+      this.$refs.pelangganAntrian.$el.selectize.focus()
     },
     openSelectizeKas(){      
       this.$refs.kas.$el.selectize.focus();
@@ -997,6 +1017,10 @@ export default {
    $("#modal_selesai").hide();
    this.$refs.kode_kas.focus(); 
  },
+  tambahModalPelanggan(){
+   $("#modalTambahPelanggan").show();
+   $("#modalSimpanPenjualan").hide();
+ },
  saveFormKas() {
   var app = this;
   var newkas = app.tambahKas;
@@ -1017,6 +1041,51 @@ export default {
     app.success = false;
     app.errors = resp.response.data.errors;
   });
+},
+ submitTambahPelanggan() {
+    
+     const app = this
+     const url = window.location.origin+(window.location.pathname).replace("dashboard", "customer")
+
+     $("#btnTambahPelanggan").html('Mohon Tunggu, Sedang menyimpan data ... <i v-if="loading" class="fa fa-spinner fa-spin"></i>')
+     $("#btnTambahPelanggan").prop('disabled', true)
+
+     axios.post(url, app.tambahPelanggan)
+	 .then((resp) => {
+
+        console.log('success')
+        const newCustomer = { 
+            id : resp.data,
+            nama_pelanggan : app.tambahPelanggan.name,
+            pelanggan : `${app.tambahPelanggan.name} - ${app.tambahPelanggan.kode_customer} - ${app.tambahPelanggan.no_telp}` 
+        }
+
+        app.$store.commit('ADD_PELANGGAN_LIST',newCustomer)
+        app.penjualan.pelanggan = resp.data
+        app.alert('Menambahkan Pelanggan')
+
+        app.tambahPelanggan.name = ""
+        app.tambahPelanggan.no_telp = ""
+        app.tambahPelanggan.password = ""
+        app.tambahPelanggan.kode_customer = ""
+        app.tambahPelanggan.email = ""
+        app.tambahPelanggan.alamat = ""
+        app.tambahPelanggan.tgl_lahir = ""
+
+        $("#modalTambahPelanggan").hide()
+        $("#modalSimpanPenjualan").show()
+        $("#btnTambahPelanggan").html('Submit')
+        $("#btnTambahPelanggan").prop('disabled', false)
+
+     })
+	 .catch((resp) => {
+        app.errors = resp.response.data.errors;
+        alert('Terjadi Kesalahan')
+        console.log(resp)
+        $("#btnTambahPelanggan").html('Submit')
+        $("#btnTambahPelanggan").prop('disabled', false)
+     })
+
 },
 defaultKas() {
  var app = this;
@@ -1640,7 +1709,7 @@ dataSettingPenjualanPos() {
 },
 simpanPenjualan(){
   let app = this
-  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelanggan() ) : app.alertTbs("Produk masih kosong")
+  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelangganAntrian() ) : app.alertTbs("Produk masih kosong")
 
 }, 
 submitSimpanPenjualan(){
@@ -1663,6 +1732,7 @@ submitSimpanPenjualan(){
         id : resp.data.id,
         no_antrian : resp.data.no_antrian,
         pelanggan : resp.data.pelanggan,
+        pelanggan_id : app.penjualan.pelanggan,
         total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
       } 
       app.antrian.data.push(newAntrian)
@@ -1717,6 +1787,11 @@ closeModalJumlahProduk(){
   $("#modalEditHarga").hide();  
   $("#modalSimpanPenjualan").hide(); 
   this.openSelectizeProduk();
+},
+closeModalTambahPelanggan(){  
+  $("#modalTambahPelanggan").hide();
+  $("#modalSimpanPenjualan").show(); 
+  this.openSelectizePelangganAntrian();
 },
 closeModalX(){
   $("#modal_tambah_kas").hide(); 

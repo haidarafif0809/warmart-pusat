@@ -60,7 +60,8 @@ class User extends Authenticatable
             $nama      = $nama_toko->name;
             $no_telpon = $nama_toko->no_telpon;
             $emails    = $nama_toko->email;
-            Mail::send('auth.emails.verification', compact('user', 'token', 'nama', 'no_telpon', 'emails'), function ($message) use ($user,$nama) {
+            $kode_verifikasi = $user->kode_verifikasi;
+            Mail::send('auth.emails.verification', compact('user', 'token', 'nama', 'no_telpon', 'emails', 'kode_verifikasi'), function ($message) use ($user,$nama) {
               $message->from('verifikasi@andaglos.id', $nama);
               $message->to($user->email, $user->name)->subject('Verifikasi Akun');
           });

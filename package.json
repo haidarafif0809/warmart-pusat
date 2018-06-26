@@ -28,6 +28,7 @@
     "vue-chartist": "^2.1.2",
     "vue-chartjs": "^3.2.1",
     "vue-clazy-load": "^0.2.0",
+    "vue-clipboard2": "^0.1.1",
     "vue-froala-wysiwyg": "^2.7.5",
     "vue-js-toggle-button": "^1.2.2",
     "vue-quill-editor": "^3.0.5",
