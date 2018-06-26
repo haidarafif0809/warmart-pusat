@@ -234,19 +234,6 @@
                         </div>
                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6 col-xs-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">Potongan(F7)</font>  
-                                                    <money style="text-align:right;" class="form-subtotal" v-model="inputPembayaranPembelian.potongan_faktur" v-bind="separator" v-shortkey.focus="['f7']"></money>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-xs-12">
-                                            <div class="form-group" style="margin-right: 10px; margin-left: 1px; margin-bottom: 1px; margin-top: 1px;">
-                                                <font style="color: black">(%)(F8)</font>    
-                                                <input type="text" class="form-subtotal" value="0" v-model="inputPembayaranPembelian.potongan_persen" v-on:blur="hitungPotonganPersen" v-shortkey.focus="['f8']" />
-                                            </div>
-                                        </div>
 
                 </div>
                 <div class="row">
