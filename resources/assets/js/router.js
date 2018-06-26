@@ -936,7 +936,6 @@ const routes = [{
         path: '/proses-edit-retur-penjualan/:id',
         component: ReturPenjualanProsesEdit,
         name: 'prosesEditReturPenjualan'
-    },
     }, {
         path: '/retur-pembelian',
         component: ReturPembelianIndex,
