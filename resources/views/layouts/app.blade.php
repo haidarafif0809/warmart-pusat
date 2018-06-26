@@ -52,9 +52,9 @@ $judul_warung = \App\Warung::where('id', $warung_id)->first()->name;
 </head>
 <style type="text/css">
 
-    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
-       padding: 1px;
-   }
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+   padding: 1px;
+}
 
 </style>
 <body>
@@ -480,7 +480,7 @@ $judul_warung = \App\Warung::where('id', $warung_id)->first()->name;
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.257')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.269')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">

@@ -579,6 +579,10 @@ Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->mi
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
 Route::post('/pembelian/edit-satuan-tbs-pembelian', 'PembelianController@editSatuanTbsPembelian')->middleware('auth');
+Route::get('/pembelian/suplier-order', 'PembelianController@suplierOrder')->middleware('auth');
+Route::get('/pembelian/suplier-penerimaan', 'PembelianController@suplierPenerimaan')->middleware('auth');
+Route::get('/pembelian/proses-tbs-order-pembelian', 'PembelianController@prosesTbsOrderPembelian')->middleware('auth');
+Route::get('/pembelian/proses-tbs-penerimaan-produk-pembelian', 'PembelianController@prosesTbsPenerimaanProduk')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -590,6 +594,11 @@ Route::get('/edit-pembelian/cek-persen-tax-pembelian', 'EditPembelianController@
 Route::get('/edit-pembelian/proses-edit-tax-tbs-pembelian', 'EditPembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/edit-pembelian/cek-total-kas-pembelian', 'EditPembelianController@total_kas')->middleware('auth');
 Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianController@cekDataPembelian')->middleware('auth');
+Route::get('/edit-pembelian/suplier-order/{id}', 'EditPembelianController@suplierOrder')->middleware('auth');
+Route::get('/edit-pembelian/suplier-penerimaan/{id}', 'EditPembelianController@suplierPenerimaan')->middleware('auth');
+Route::get('/edit-pembelian/proses-tbs-order-pembelian', 'EditPembelianController@prosesTbsOrderPembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-tbs-penerimaan-produk-pembelian', 'EditPembelianController@prosesTbsPenerimaanProduk')->middleware('auth');
+Route::get('/edit-pembelian/pilih-suplier/{id}', 'EditPembelianController@pilih_suplier')->middleware('auth');
 Route::post('/pembelian/edit-satuan-edit-tbs-pembelian', 'PembelianController@editSatuanEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN
@@ -1134,6 +1143,35 @@ Route::post('/retur-pembelian/proses-tambah-edit-tbs-retur-pembelian', 'ReturPem
 Route::post('/retur-pembelian/proses-batal-edit-retur', 'ReturPembelianController@batalEditRetur')->middleware('auth');
 Route::post('/retur-pembelian/update-retur-pembelian', 'ReturPembelianController@updateReturPembelian')->middleware('auth');
 
+//Retur Penjualan Vue .js
+Route::get('/retur-penjualan/view', 'ReturPenjualanController@view')->middleware('auth');
+Route::get('/retur-penjualan/pencarian', 'ReturPenjualanController@pencarian')->middleware('auth');
+Route::get('/retur-penjualan/view-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-tbs-retur-penjualan', 'ReturPenjualanController@viewTbsReturPenjualan')->middleware('auth');
+Route::get('/retur-penjualan/data-pelanggan-retur/{id}/{jenis_penjualan}', 'ReturPenjualanController@dataPelangganRetur')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-pelanggan-retur/{id}/{jenis_penjualan}', 'ReturPenjualanController@pencarianPelangganRetur')->middleware('auth');
+Route::get('/retur-penjualan/view-detail/{id}', 'ReturPenjualanController@viewDetail')->middleware('auth');
+Route::get('/retur-penjualan/pencarian-detail/{id}', 'ReturPenjualanController@pencarianDetail')->middleware('auth');
+
+Route::post('/retur-penjualan/proses-tambah-tbs-retur-penjualan', 'ReturPenjualanController@prosesTbsReturPenjualan')->middleware('auth');
+Route::get('/retur-penjualan/subtotal-tbs-retur-penjualan/{jenis_tbs}', 'ReturPenjualanController@cekSubtotalTbsReturPenjualan')->middleware('auth');
+Route::delete('/retur-penjualan/proses-hapus-tbs-retur-penjualan/{id}', [
+    'middleware' => ['auth'],
+    'as'         => 'retur-penjualan.proses_hapus_tbs_retur_penjualan',
+    'uses'       => 'ReturPenjualanController@prosesHapusTbsReturPenjualan',
+    ]);
+Route::get('/retur-penjualan/cek-pelanggan-double', 'ReturPenjualanController@cekPelangganDouble')->middleware('auth');
+Route::get('/retur-penjualan/proses-edit-jumlah-retur', 'ReturPenjualanController@editJumlahReturTbs')->middleware('auth'); 
+Route::post('/retur-penjualan/proses-potongan-tbs', 'ReturPenjualanController@editPotongan')->middleware('auth'); 
+Route::post('/retur-penjualan/proses-batal-retur-penjualan', [
+        'middleware' => ['auth'],
+        'as'         => 'retur-penjualan.proses_batal_retur_penjualan',
+        'uses'       => 'ReturPenjualanController@prosesBatalReturPenjualan',
+        ]);
+Route::post('/retur-penjualan/edit-satuan-tbs', 'ReturPenjualanController@editSatuanTbs')->middleware('auth');
+
+Route::get('/retur-penjualan/cetak-retur-penjualan/{id}', 'ReturPenjualanController@cetakRetur')->middleware('auth');
+
 Route::middleware('optimizeImages', 'auth')->group(function () {
 
     Route::resource('user', 'UserController');
@@ -1179,6 +1217,7 @@ Route::middleware('optimizeImages', 'auth')->group(function () {
     Route::resource('pembelian-order', 'PembelianOrderController');
     Route::resource('penerimaan-produk', 'PenerimaanProdukController');
     Route::resource('tema', 'SettingTemaController');
+    Route::resource('retur-penjualan', 'ReturPenjualanController');
     Route::resource('retur-pembelian', 'ReturPembelianController');
 
 //BARANG

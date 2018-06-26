@@ -42,6 +42,8 @@ use App\Observers\ProdukObserver;
 use App\Observers\StokOpnameObserver;
 use App\Observers\UserWarungObserver;
 use App\Observers\WarungObserver;
+use App\Observers\ReturPenjualanObserver;
+use App\Observers\DetailReturPenjualanObserver;
 use App\PembayaranHutang;
 use App\PembayaranPiutang;
 use App\Pembelian;
@@ -50,6 +52,8 @@ use App\ReturPembelian;
 use App\StokOpname;
 use App\UserWarung;
 use App\Warung;
+use App\ReturPenjualan;
+use App\DetailReturPenjualan;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
@@ -92,6 +96,8 @@ class AppServiceProvider extends ServiceProvider
         BankWarung::observe(BankWarungObserver::class);
         PembelianOrder::observe(PembelianOrderObserver::class);
         PenerimaanProduk::observe(PenerimaanProdukObserver::class);
+        DetailReturPenjualan::observe(DetailReturPenjualanObserver::class);
+        ReturPenjualan::observe(ReturPenjualanObserver::class);
         ReturPembelian::observe(ReturPembelianObserver::class);
         DetailReturPembelian::observe(DetailReturPembelianObserver::class);
     }
