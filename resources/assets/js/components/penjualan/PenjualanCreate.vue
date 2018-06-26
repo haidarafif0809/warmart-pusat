@@ -439,7 +439,7 @@
 
           <div class="form-group">
             <div class="col-md-12 col-xs-12 hurufBesar">
-              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
+              <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelangganAntrian'> 
                 <option v-for="pelanggans, index in pelanggan" v-bind:value="pelanggans.id">{{ pelanggans.pelanggan }}</option>
               </selectize-component>
             </div>
@@ -632,7 +632,7 @@
                 <button type="button"   class="btn btn-success" id="bayar" v-on:click="bayarPenjualan()" v-shortkey.push="['f2']" @shortkey="bayarPenjualan() "><b>Bayar(F2)</b> </button>
               </div>
               <div class="col-md-4 col-xs-4">
-                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()" v-shortkey.push="['shift']" @shortkey="simpanPenjualan() "><b>Simpan</b></button>
+                <button type="submit" class="btn btn-info" id="btnSimpan" v-on:click="simpanPenjualan()"><b>Simpan</b></button>
               </div>
               <div class="col-md-4 col-xs-4">
                 <button type="submit" class="btn btn-danger" id="btnBatal" v-on:click="batalPenjualan()" v-shortkey.push="['f3']" @shortkey="batalPenjualan()" > <i class="material-icons">clear</i><b>(F3)</b> </button>
@@ -714,7 +714,6 @@ export default {
         placeholder: '--PILIH PELANGGAN (F4)--',
         sortField: 'text',
         openOnFocus : true
-
       },
       placeholder_kas: {
         placeholder: '--PILIH KAS--',
@@ -801,9 +800,13 @@ export default {
     openSelectizeProduk(){      
       this.$refs.produk.$el.selectize.focus();
     },
-    openSelectizePelanggan(){      
-      this.$refs.pelanggan.$el.selectize.setValue("");
-      this.$refs.pelanggan.$el.selectize.focus();
+    openSelectizePelanggan(){    
+      this.$refs.pelanggan.$el.selectize.setValue("")      
+      this.$refs.pelanggan.$el.selectize.focus()
+    },
+    openSelectizePelangganAntrian(){    
+      this.$refs.pelangganAntrian.$el.selectize.setValue("")      
+      this.$refs.pelangganAntrian.$el.selectize.focus()
     },
     openSelectizeKas(){      
       this.$refs.kas.$el.selectize.focus();
@@ -1640,7 +1643,7 @@ dataSettingPenjualanPos() {
 },
 simpanPenjualan(){
   let app = this
-  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelanggan() ) : app.alertTbs("Produk masih kosong")
+  app.tbs_penjualan.length > 0 ? ($("#modalSimpanPenjualan").show() , this.openSelectizePelangganAntrian() ) : app.alertTbs("Produk masih kosong")
 
 }, 
 submitSimpanPenjualan(){
@@ -1663,6 +1666,7 @@ submitSimpanPenjualan(){
         id : resp.data.id,
         no_antrian : resp.data.no_antrian,
         pelanggan : resp.data.pelanggan,
+        pelanggan_id : app.penjualan.pelanggan,
         total_belanja : new Intl.NumberFormat('es-ES').format(app.penjualan.subtotal)
       } 
       app.antrian.data.push(newAntrian)
