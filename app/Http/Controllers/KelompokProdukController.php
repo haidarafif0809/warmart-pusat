@@ -7,6 +7,7 @@ use App\KategoriBarang;
 use App\SettingAplikasi;
 use Illuminate\Http\Request;
 use Laratrust;
+use Auth;
 
 class KelompokProdukController extends Controller
 {
@@ -33,7 +34,7 @@ class KelompokProdukController extends Controller
 
     public function view()
     {
-        $kelompok_produk = KategoriBarang::orderBy('id', 'desc')->paginate(10);
+        $kelompok_produk = KategoriBarang::where('warung_id', Auth::user()->id_warung)->orderBy('id', 'desc')->paginate(10);
         $array           = array();
         foreach ($kelompok_produk as $kelompok_produks) {
             $barang = Barang::where('kategori_barang_id', $kelompok_produks->id)->count();
@@ -129,6 +130,7 @@ class KelompokProdukController extends Controller
         $kelompok_produk = KategoriBarang::create([
             'nama_kategori_barang' => $request->nama_kelompok,
             'kategori_icon'        => $request->icon_kelompok,
+            'warung_id'            => Auth::user()->id_warung
         ]);
         return response(200);
     }
@@ -173,6 +175,7 @@ class KelompokProdukController extends Controller
         $kelompok_produk = KategoriBarang::find($id)->update([
             'nama_kategori_barang' => $request->nama_kelompok,
             'kategori_icon'        => $request->icon_kelompok,
+            'warung_id'            => Auth::user()->id_warung
         ]);
 
     }

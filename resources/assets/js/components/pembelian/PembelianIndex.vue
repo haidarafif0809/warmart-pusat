@@ -1,8 +1,8 @@
 <style scoped>
-.pencarian {
-	color: red; 
-	float: right;
-}
+	.pencarian {
+		color: red; 
+		float: right;
+	}
 </style>
 <template>
 	<div class="row">
@@ -164,65 +164,65 @@
 									<td>{{ pembelians.status_pembelian }}</td>
 									<td style="text-align:right;" >Rp. {{ pembelians.total }}</td>
 									<td style="text-align:right;" v-if="otoritas.edit_pembelian == 1"><router-link :to="{name: 'editPembelianProses', params: {id: pembelians.id}}" class="btn btn-xs btn-default" v-bind:id="'edit-' + pembelians.id" >
-									Edit </router-link> </td>
-									<td style="text-align:right;">
-										<router-link :to="{name: 'detailPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelians.no_faktur" >
-										Detail </router-link> 
-									</td>
-									<td style="text-align:right;">
-										<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian/cetak-besar-pembelian/'+pembelians.id">Cetak Ulang</a>
-									</td>
-									<td style="text-align:right;" v-if="otoritas.hapus_pembelian == 1"> 
-										<a  href="#" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
-									</td>
-								</tr>
-							</tbody>					
-							<tbody class="data-tidak-ada" v-else-if="pembelian.length == 0 && loading == false">
-								<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
-							</tbody>
-						</table>	
+										Edit </router-link> </td>
+										<td style="text-align:right;">
+											<router-link :to="{name: 'detailPembelian', params: {id: pembelians.id}}" class="btn btn-xs btn-info" v-bind:id="'detail-' + pembelians.no_faktur" >
+												Detail </router-link> 
+											</td>
+											<td style="text-align:right;">
+												<a target="blank" class="btn btn-primary btn-xs" v-bind:href="'pembelian/cetak-besar-pembelian/'+pembelians.id">Cetak Ulang</a>
+											</td>
+											<td style="text-align:right;" v-if="otoritas.hapus_pembelian == 1"> 
+												<a  href="#pembelian" class="btn btn-xs btn-danger" v-bind:id="'delete-' + pembelians.id" v-on:click="deleteEntry(pembelians.id, index,pembelians.no_faktur)">Delete</a>
+											</td>
+										</tr>
+									</tbody>					
+									<tbody class="data-tidak-ada" v-else-if="pembelian.length == 0 && loading == false">
+										<tr ><td colspan="7"  class="text-center">Tidak Ada Data</td></tr>
+									</tbody>
+								</table>	
 
-						<vue-simple-spinner v-if="loading"></vue-simple-spinner>
+								<vue-simple-spinner v-if="loading"></vue-simple-spinner>
 
-						<div align="right"><pagination :data="pembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
+								<div align="right"><pagination :data="pembelianData" v-on:pagination-change-page="getResults" :limit="4"></pagination></div>
 
+							</div>
+							<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
+						</div>
 					</div>
-					<p style="color: red; font-style: italic;">*Note : Klik Kolom No Transaksi, Untuk Melihat Detail Transaksi Pembelian .</p> 
+
 				</div>
 			</div>
 
-		</div>
-	</div>
-
-</template>
+		</template>
 
 
-<script>
-export default {
-	data: function () {
-		return {
-			pembelian: [],
-			pembelianData: {},
-			otoritas: {},
-			detailPembelians: [],
-			url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
-			pencarian: '',
-			loading: true,
-			no_faktur : 0,
-			kas : '',
-			total : 0,
-			potongan : 0,
-			tunai : 0,
-			kembalian : 0,
-			jatuh_tempo : '',
-			user_buat : '',
-		}
-	},
-	mounted() {
-		var app = this;
-		app.getResults();
-	},
-	watch: {
+		<script>
+			export default {
+				data: function () {
+					return {
+						pembelian: [],
+						pembelianData: {},
+						otoritas: {},
+						detailPembelians: [],
+						url : window.location.origin+(window.location.pathname).replace("dashboard", "pembelian"),
+						pencarian: '',
+						loading: true,
+						no_faktur : 0,
+						kas : '',
+						total : 0,
+						potongan : 0,
+						tunai : 0,
+						kembalian : 0,
+						jatuh_tempo : '',
+						user_buat : '',
+					}
+				},
+				mounted() {
+					var app = this;
+					app.getResults();
+				},
+				watch: {
         // whenever question changes, this function will run
         pencarian: function (newQuestion) {
         	this.getHasilPencarian();

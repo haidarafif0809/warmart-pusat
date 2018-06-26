@@ -579,6 +579,10 @@ Route::get('/pembelian/template-excel', 'PembelianController@templateExcel')->mi
 Route::get('/pembelian/satuan-konversi/{id_produk}', 'PembelianController@dataSatuanProduk')->middleware('auth');
 Route::get('/pembelian/satuan-konversi-edit/{id_produk}', 'PembelianController@dataSatuanProdukEdit')->middleware('auth');
 Route::post('/pembelian/edit-satuan-tbs-pembelian', 'PembelianController@editSatuanTbsPembelian')->middleware('auth');
+Route::get('/pembelian/suplier-order', 'PembelianController@suplierOrder')->middleware('auth');
+Route::get('/pembelian/suplier-penerimaan', 'PembelianController@suplierPenerimaan')->middleware('auth');
+Route::get('/pembelian/proses-tbs-order-pembelian', 'PembelianController@prosesTbsOrderPembelian')->middleware('auth');
+Route::get('/pembelian/proses-tbs-penerimaan-produk-pembelian', 'PembelianController@prosesTbsPenerimaanProduk')->middleware('auth');
 
 //Edit Pembelian
 Route::get('/edit-pembelian/proses-tambah-tbs-pembelian', 'EditPembelianController@proses_tambah_tbs_pembelian')->middleware('auth');
@@ -590,6 +594,11 @@ Route::get('/edit-pembelian/cek-persen-tax-pembelian', 'EditPembelianController@
 Route::get('/edit-pembelian/proses-edit-tax-tbs-pembelian', 'EditPembelianController@editTaxTbsPembelian')->middleware('auth');
 Route::get('/edit-pembelian/cek-total-kas-pembelian', 'EditPembelianController@total_kas')->middleware('auth');
 Route::get('/edit-pembelian/cek-data-tbs-pembelian/{id}', 'EditPembelianController@cekDataPembelian')->middleware('auth');
+Route::get('/edit-pembelian/suplier-order/{id}', 'EditPembelianController@suplierOrder')->middleware('auth');
+Route::get('/edit-pembelian/suplier-penerimaan/{id}', 'EditPembelianController@suplierPenerimaan')->middleware('auth');
+Route::get('/edit-pembelian/proses-tbs-order-pembelian', 'EditPembelianController@prosesTbsOrderPembelian')->middleware('auth');
+Route::get('/edit-pembelian/proses-tbs-penerimaan-produk-pembelian', 'EditPembelianController@prosesTbsPenerimaanProduk')->middleware('auth');
+Route::get('/edit-pembelian/pilih-suplier/{id}', 'EditPembelianController@pilih_suplier')->middleware('auth');
 Route::post('/pembelian/edit-satuan-edit-tbs-pembelian', 'PembelianController@editSatuanEditTbsPembelian')->middleware('auth');
 
 // PEMBELIAN

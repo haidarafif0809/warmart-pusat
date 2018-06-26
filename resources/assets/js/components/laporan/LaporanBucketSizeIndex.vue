@@ -86,10 +86,10 @@
 										<div class="form-group">
 											<label>Pesan Promo</label>
 											<span v-if="errors.pesan" id="pesan_error" class="label label-danger">{{ errors.pesan[0] }}</span>
-											<textarea class="form-control" placeholder="Silakan Isi Pesan Promo Untuk Pelanggan disini ..." rows="4" v-model="actionBucketSize.pesan"></textarea>
+											<textarea class="form-control" placeholder="Silakan Isi Pesan Promo Untuk Pelanggan disini ..." rows="4" v-model="actionBucketSize.pesan" v-shortkey="['f2']" @shortkey="copyProduk()"></textarea>
 										</div>
 
-										<p style="color: red; font-style: italic;">*Note : Gunakan Shorcut F2 untuk memasukan produk </p>    
+										<p style="color: red; font-style: italic;">*Note : Gunakan Shorcut F2 untuk memasukan produk </p>
 
 										<ul class="timeline timeline-simple">
 											<li class="timeline-inverted">
@@ -101,7 +101,7 @@
 														<span class="label label-info">Pesan</span>
 													</div>
 													<div class="timeline-body">
-														<p>Hai [nama pelanggan	]..</p>
+														<p>Hai [nama pelanggan	]...</p>
 														<p>{{actionBucketSize.pesan}}</p>
 													</div>
 													<h6>
@@ -953,6 +953,12 @@ export default {
 				$("#kirimPesan").prop('disabled', false)
 			})
 			
+		},
+		copyProduk(){
+			let app = this
+			let produk = app.actionBucketSize.produk.split("|")
+			app.actionBucketSize.pesan = `${app.actionBucketSize.pesan} ${produk[1]}`
+			console.log(app.actionBucketSize.pesan)
 		},
 		alert(pesan) {
 			this.$swal({

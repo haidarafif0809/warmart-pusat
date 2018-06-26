@@ -218,6 +218,8 @@ class CustomerController extends Controller
             KomunitasCustomer::create(['user_id' => $customer_baru->id, 'komunitas_id' => $request->komunitas]);
         }
 
+        return $customer_baru->id;
+
     }
 
     /**
