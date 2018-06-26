@@ -186,9 +186,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
-        Lucasvdh\LaravelWhatsapp\WhatsappServiceProvider::class,
-        'Xaamin\Whatsapi\WhatsapiServiceProvider'
+        Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class
 
 
     ],
@@ -255,10 +253,7 @@ return [
         'SEO'          => Artesaos\SEOTools\Facades\SEOTools::class,
         'Tracker'      => 'PragmaRX\Tracker\Vendor\Laravel\Facade',
         'Agent'        => Jenssegers\Agent\Agent::class,
-        'Image'        => Intervention\Image\Facades\Image::class,
-        'Whatsapp' => Lucasvdh\LaravelWhatsapp\Facades\Whatsapp::class,
-        'Whatsapi' => 'Xaamin\Whatsapi\Facades\Laravel\Whatsapi',
-        'WhatsapiTool' => 'Xaamin\Whatsapi\Facades\Laravel\Registration',
+        'Image'        => Intervention\Image\Facades\Image::class
 
     ],
 

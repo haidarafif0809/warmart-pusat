@@ -17,6 +17,8 @@ const state = {
 	supplier : [],
 	bank : [],
 	suplier_order : [],
+	suplier_order_pembelian : [],
+	suplier_penerimaan : [],
 }
 //Getter berfungsi untuk mengakses state
 // Dengan menggunakan Getter kita bisa mengolah terlebih dahulu state yang akan kita ambil seperti fungsi computed yang ada di VueJS. Jadi kita bisa memfilter data state sebelum di panggil. 
@@ -58,6 +60,14 @@ const mutations = {
 	SET_SUPLIER_ORDER_LIST : (state, { list }) => {
 		state.suplier_order = list
 	},
+	// untuk memuat data suplier order
+	SET_SUPLIER_ORDER_PEMBELIAN_LIST : (state, { list }) => {
+		state.suplier_order_pembelian = list
+	},
+	// untuk memuat data suplier penerimaan
+	SET_SUPLIER_PENERIMAAN_LIST : (state, { list }) => {
+		state.suplier_penerimaan = list
+	},
 	SET_PRODUK_LAPORAN_LIST : (state, { list }) => {
 		state.produk_laporan = list
 	},
@@ -89,6 +99,9 @@ const mutations = {
 	SET_SUPPLIER_LIST : (state, { list }) => {
 		state.supplier = list
 	},
+    ADD_PELANGGAN_LIST : (state, payload) => {
+        state.pelanggan.push(payload)
+    }
 
 }
 // Action mirip dengan mutation
@@ -184,6 +197,30 @@ const actions = {
 		axios.get('penerimaan-produk/suplier-order')
 		.then((resp) => {
 			commit('SET_SUPLIER_ORDER_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_SUPLIER_ORDER_PEMBELIAN_LIST : function({commit}){
+		axios.get('pembelian/suplier-order')
+		.then((resp) => {
+			commit('SET_SUPLIER_ORDER_PEMBELIAN_LIST',
+			{
+				list:resp.data
+			})
+		},
+		(err) => {
+			console.log(err)
+		})
+	},
+	LOAD_SUPLIER_PENERIMAAN_LIST : function({commit}){
+		axios.get('pembelian/suplier-penerimaan')
+		.then((resp) => {
+			commit('SET_SUPLIER_PENERIMAAN_LIST',
 			{
 				list:resp.data
 			})
