@@ -6,7 +6,7 @@ Vue.component('form-tambah-pelanggan', {
 	template: `<span>    
                     <div class="form-group">
                         <input class="form-control" reeuired autocomplete="off" placeholder="Nama Pelanggan" type="text" name="name"
-                        v-bind:value="test" v-on:input="data.name = $event.target.value" autofocus="">
+                        v-bind:value="data.name" v-on:input="data.name = $event.target.value" autofocus="">
                         <span v-if="errors.name" id="name_error" class="label label-danger">{{ errors.name[0] }}</span>
                     </div>
 
