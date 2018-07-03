@@ -81,6 +81,7 @@
 										<th style="width:1px;">Waktu</th>
 										<th>Pelanggan</th>
 										<th>Status</th>
+										<th>Piutang</th>
 										<th class="text-right">Total</th>
 
 
@@ -129,6 +130,10 @@
 										<td>{{ penjualan.waktu }}</td>
 										<td>{{ penjualan.pelanggan }}</td>
 										<td>{{ penjualan.status_penjualan }}</td>
+										<td>
+											<span v-if="penjualan.status_penjualan == 'Piutang'"> {{ penjualan.piutang }} </span>
+											<span v-else> 0 </span>
+										</td>
 										<td align="right"> {{ penjualan.total }}</td>
 
 									</tr>
@@ -404,6 +409,7 @@
 				}
 				axios.get(app.url+'/view?page='+page)
 				.then(function (resp) {
+					console.log('then getResults:', resp.data.data);
 					app.penjualan = resp.data.data;
 					app.penjualanData = resp.data;
 					app.otoritas = resp.data.otoritas.original;
@@ -412,7 +418,7 @@
 					app.$refs.pencarian.focus()
 				})
 				.catch(function (resp) {
-					console.log(resp);
+					console.log('catch getResults:', resp);
 					app.loading = false;
 					app.seen = true;
 					alert("Tidak Dapat Memuat Penjualan");

@@ -30,14 +30,14 @@
                     <h4 class="card-title">Edit Setting Footer </h4>
                     <form v-on:submit.prevent="saveForm()" class="form-horizontal">
                         <div class="row" style="margin-left: 2%;">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="judul_warung" class="col-md-2 control-label label-font-style">Header Warung</label>
                                 <div class="col-md-8">
                                     <div class="col-md-10">
                                         <input type="text" v-model="setting_footer.judul_warung" class="form-control input-font-style" autocomplete="off" :placeholder="placeholders.judul_warung" name="judul_warung">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="support_link" class="col-md-2 control-label label-font-style">Support link</label>
                                 <div class="col-md-8">

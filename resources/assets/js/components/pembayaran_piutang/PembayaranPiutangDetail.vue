@@ -60,7 +60,7 @@
                                     <tbody v-if="detailPembayaranPiutang.length"  class="data-ada">
                                         <tr v-for="detailPembayaranPiutang, index in detailPembayaranPiutang" >
 
-                                            <td>{{ detailPembayaranPiutang.no_faktur_penjualan }}</td>
+                                            <td>{{ detailPembayaranPiutang.id_detail_pembayaran_piutang }}</td>
                                             <td>{{ detailPembayaranPiutang.pelanggan }}</td>
                                             <td align="center">{{ detailPembayaranPiutang.jatuh_tempo  }}</td>
                                             <td align="right">{{ detailPembayaranPiutang.piutang | pemisahTitik }}</td>
@@ -150,7 +150,7 @@ methods: {
         if (typeof page === 'undefined') {
             page = 1;
         }
-        axios.get(app.url+'/view-detail-pembayaran-piutang/'+id+'?page='+page)
+        axios.get(app.url + '/view-detail-pembayaran-piutang/' + id + '?page=' + page)
         .then(function (resp) {
             console.log(resp)
             app.detailPembayaranPiutang = resp.data.data;
@@ -163,7 +163,7 @@ methods: {
             });
         })
         .catch(function (resp) {
-            console.log(resp);
+            console.log('catch getResults:', resp);
             app.loading = false;
             app.seen = true;
             alert("Tidak Dapat Memuat Detail Pembayaran Piutang");
@@ -183,7 +183,7 @@ methods: {
             app.seen = true;
         })
         .catch(function (resp) {
-            console.log(resp);
+            console.log('catch getHasilPencarian:', resp);
             alert("Tidak Dapat Memuat Detail Pembayaran Piutang");
         });
     }

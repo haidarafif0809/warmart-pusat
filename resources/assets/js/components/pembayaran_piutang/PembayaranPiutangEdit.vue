@@ -340,7 +340,7 @@
                         <thead class="text-primary">
                             <tr>
 
-                                <th>No. Faktur</th>
+                                <th>No. Transaksi</th>
                                 <th> Pelanggan </th>
                                 <th class="text-center">Tanggal JT</th>
                                 <th class="text-right">Piutang</th>
@@ -356,7 +356,7 @@
                         <tbody v-if="tbs_pembayaran_piutang.length"  class="data-ada">
                             <tr v-for="tbs_pembayaran_piutang, index in tbs_pembayaran_piutang" >
 
-                                <td>{{ tbs_pembayaran_piutang.no_faktur_penjualan }}</td>
+                                <td>{{ tbs_pembayaran_piutang.id_tbs_pembayaran_piutang }}</td>
                                 <td>{{ tbs_pembayaran_piutang.pelanggan }}</td>
                                 <td align="center">{{ tbs_pembayaran_piutang.jatuh_tempo | tanggal }}</td>
                                 <td align="right">{{ tbs_pembayaran_piutang.piutang | pemisahTitik }}</td>
@@ -548,7 +548,7 @@ methods: {
         })
         .catch(function (resp) {
 
-            console.log(resp);
+            console.log('catch dataKas:', resp);
             alert("Tidak Bisa Memuat Kas");
         });
     },
@@ -566,6 +566,7 @@ methods: {
 
         })
         .catch(function (resp) {
+            console.log('catch getPembayaranPiutang:', resp);
             app.loading = false;
             alert("Tidak Dapat Memuat Pembayaran Piutang");
         });
@@ -576,8 +577,9 @@ methods: {
         if (typeof page === 'undefined') {
             page = 1;
         }
-        axios.get(app.url_piutang+'/view-edit-tbs-pembayaran-piutang/'+id+'?page='+page)
+        axios.get(app.url_piutang + '/view-edit-tbs-pembayaran-piutang/' + id + '?page=' + page)
         .then(function (resp) {
+            console.log('then getResults:', resp);
             app.tbs_pembayaran_piutang = resp.data.data;
             app.tbsPembayaranPiutangData = resp.data;
             app.loading = false;
@@ -591,6 +593,7 @@ methods: {
             }
         })
         .catch(function (resp) {
+            console.log('catch getResults:', resp);
             app.loading = false;
             app.seen = true;
             alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
@@ -611,7 +614,7 @@ methods: {
             app.seen = true;
         })
         .catch(function (resp) {
-            console.log(resp);
+            console.log('catch getHasilPencarian:', resp);
             alert("Tidak Dapat Memuat Faktur Penjualan Piutang");
         });
     },    
@@ -621,6 +624,7 @@ methods: {
             app.penjualan_piutang = resp.data;
         })
         .catch(function (resp) {
+            console.log('catch dataPiutang:', resp);
             alert("Tidak Bisa Memuat Penjualan Piutang");
         });
     },
@@ -634,7 +638,7 @@ methods: {
             app.inputTbsPembayaranPiutang.jatuh_tempo = resp.data.tanggal_jt_tempo;
         })
         .catch(function (resp) {
-            console.log(resp);
+            console.log('catch getDataFakturPiutang:', resp);
             alert("Tidak Bisa Memuat Penjualan Piutang");
         });
     },
@@ -690,8 +694,7 @@ methods: {
 
             })
             .catch(function (resp) { 
-
-                console.log(resp);              
+                console.log('catch tambahTbsPembayaranPiutang:', resp);
                 app.loading = false;
                 alert("Tidak dapat Menambahkan Faktur Penjualan Piutang");        
                 app.errors = resp.response.data.errors;
@@ -803,7 +806,7 @@ methods: {
                 }
             })
             .catch(function (resp) { 
-                console.log(resp);                  
+                console.log('catch editTbsPembayaranPiutang:', resp);
                 app.loading = false;
                 alert("Tidak Dapat Mengubah Potongan");
             });
@@ -844,7 +847,7 @@ methods: {
             }
         })
         .catch(function (resp) {
-            console.log(resp);
+            console.log('catch prosesDelete:', resp);
             app.loading = false;
             alert("Tidak dapat Menghapus Faktur "+no_faktur_penjualan);
         });
@@ -870,6 +873,7 @@ methods: {
                 app.pembayaranPiutang.subtotal = 0
             })
             .catch(function (resp) {
+                console.log('catch batalPembayaranPiutang:', resp);
                 app.loading = false;
                 alert("Tidak dapat Membatalkan Transaksi Pembayaran Piutang");
             });
@@ -920,7 +924,7 @@ methods: {
             }
         })
         .catch(function (resp) {
-            console.log(resp);              
+            console.log('catch prosesSelesaiPembayaranPiutang:', resp);
             app.loading = false;
             alert("Tidak dapat Menyelesaikan Transaksi Pembayaran Penjualan");        
             app.errors = resp.response.data.errors;
@@ -948,6 +952,7 @@ methods: {
         app.dataKas();
     })
       .catch(function (resp) {
+        console.log('catch saveFormKas:', resp);
         app.success = false;
         app.errors = resp.response.data.errors;
     });

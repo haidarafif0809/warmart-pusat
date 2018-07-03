@@ -5,8 +5,8 @@
 use Jenssegers\Agent\Agent;
 $agent = new Agent();
 $warung_id = \App\SettingPembedaAplikasi::where('app_address', url('/'))->first()->warung_id;
-$judul_warung = \App\SettingFooter::where('warung_id', $warung_id)->first()->judul_warung;
 $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description'])->where('warung_id',$warung_id)->first();
+$judul_warung = \App\Warung::where('id', $warung_id)->first()->name;
 ?>
 <head>
     <meta charset="utf-8"/>
@@ -63,18 +63,18 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 
 
         <!--MODAL PINTAS TAMBAH KAS-->
-        <div class="modal" id="modalTour" role="dialog" data-backdrop=""> 
+        <div class="modal" id="modalTour" role="dialog" data-backdrop="">
             <div class="modal-dialog">
-                <!-- Modal content--> 
-                <div class="modal-content"> 
+                <!-- Modal content-->
+                <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button> 
-                        <h4 class="modal-title"> 
-                            <div class="alert-icon"> 
+                        <button type="button" class="close" data-dismiss="modal"> <i class="material-icons">close</i></button>
+                        <h4 class="modal-title">
+                            <div class="alert-icon">
                                 Petunjuk Penggunaan
-                            </div> 
-                        </h4> 
-                    </div>                         
+                            </div>
+                        </h4>
+                    </div>
                     <div class="modal-body">
                         <ol>
                             <router-link :to="'produk?tour'" class="menu-nav" data-dismiss="modal">
@@ -82,13 +82,13 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                             </router-link>
                         </ol>
                     </div>
-                    <div class="modal-footer">  
-                        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal"><i class="material-icons">close</i> Batal</button> 
-                    </div> 
-                </div>       
-            </div> 
-        </div> 
-        <!-- / MODAL PINTAS TAMBAH KAS --> 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal"><i class="material-icons">close</i> Batal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / MODAL PINTAS TAMBAH KAS -->
 
         <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="">
                 <!--
@@ -103,14 +103,14 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
         WM
     </a>
     <a class="simple-text logo-normal" href="https://war-mart.id">
-        WAR-MART.ID    
+        WAR-MART.ID
     </a>
     @else
     <a class="simple-text logo-mini" href="<?= url('/'); ?>">
         TP
     </a>
     <a class="simple-text logo-normal" href="<?= url('/'); ?>">
-        {{strtoupper($judul_warung)}}    
+        {{strtoupper($judul_warung)}}
     </a>
     @endif
 </div>
@@ -157,7 +157,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                         UP
                     </span>
                     <span class="sidebar-normal">
-                        Ubah Profil 
+                        Ubah Profil
                     </span>
                 </router-link>
             </li>
@@ -415,7 +415,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                 @if ($agent->isMobile() && Auth::user()->tipe_user == 4) <!--JIKA DAKSES VIA HP/TAB-->
                 <span id="sisa_waktu_demo" style="margin-left: 10px"></span>
 
-                <span>                    
+                <span>
                     <a  href="{{ url('/halaman-warung/'.Auth::user()->id_warung.'') }}" class="btn btn-xs btn-rose" style="margin-left: 10px">Preview Online Shop</a>
                     @endif
                 </span>
@@ -480,7 +480,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 </body>
 <!--   Core JS Files   -->
 
-<script src="{{ asset('js/app.js?v=1.270')}}" type="text/javascript">
+<script src="{{ asset('js/app.js?v=1.280')}}" type="text/javascript">
 
 </script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript">
@@ -570,7 +570,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
 
         if (setting_aplikasi == 1) {
 
-            $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){ 
+            $.get('{{ Url("daftar-topos/cek-sisa-demo") }}',{'_token': $('meta[name=csrf-token]').attr('content')}, function(data){
 
                 if (data.status_pembayaran < 2) {
 
@@ -582,9 +582,9 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                     $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-xs btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
                     @else
                     $("#sisa_waktu_demo").append("<a href='pendaftaran-topos/1' class='btn btn-round btn-rose' target='blank' style='margin-left: 10px'>Daftar Sekarang!</a>");
-                    @endif 
+                    @endif
 
-                }else{  
+                }else{
 
                     $("#sisa_waktu_demo").text("Masa Percobaan Anda Sudah Habis!");
 
@@ -603,7 +603,7 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                           confirmButtonText: 'OK',
                           confirmButtonClass: 'btn btn-success',
                           buttonsStyling: false,
-                          allowEscapeKey  :false,   
+                          allowEscapeKey  :false,
                           allowOutsideClick :false
                       }).then(function () {
                         window.location.replace(window.location.origin+(window.location.pathname));
@@ -613,11 +613,11 @@ $optimasSeo = \App\SettingSeo::select(['content_keyword', 'content_description']
                 }
             }
 
-        }); 
+        });
 
         }
 
-        $("#minimizeSidebar").click();  
+        $("#minimizeSidebar").click();
 
         $(document).on('click', '.menu-nav', function(){
          $('.navbar-toggle ').click();
