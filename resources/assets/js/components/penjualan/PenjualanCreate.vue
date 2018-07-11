@@ -128,7 +128,7 @@
               <div class="card" style="margin-bottom:1px; margin-top:1px; margin-right:1px; margin-left:1px;">
 
                 <div class="row">
-                  <div class="col-md-6 col-xs-12">
+                  <div class="col-md-5 col-xs-10">
                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                       <font style="color: black">Pelanggan(F4)</font><br>
                       <selectize-component v-model="penjualan.pelanggan" :settings="placeholder_pelanggan" id="pelanggan" ref='pelanggan'> 
@@ -137,6 +137,13 @@
                       <br v-if="errors.pelanggan">  <span v-if="errors.pelanggan" id="pelanggan_error" class="label label-danger">{{ errors.pelanggan[0] }}</span>
                     </div>
                   </div>
+                  <div class="col-md-1 col-xs-1" style="padding-left:0px">
+                   <div class="form-group">
+                    <div class="row" style="margin-top:11px">
+                      <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalPelanggan(1)" type="button"> <i class="material-icons" >add</i> </button>
+                    </div>
+                  </div>
+                </div>
                   <div class="col-md-5 col-xs-10">
                     <div class="form-group" style="margin-right: 10px; margin-left: 10px;">
                       <font style="color: black">Kas(F6)</font><br>
@@ -412,7 +419,7 @@
           <div class="col-md-1 col-xs-1" style="padding-left:0px">
            <div class="form-group">
             <div class="row" style="margin-top:11px">
-              <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalPelanggan()" type="button"> <i class="material-icons" >add</i> </button>
+              <button class="btn btn-primary btn-icon waves-effect waves-light" v-on:click="tambahModalPelanggan(2)" type="button"> <i class="material-icons" >add</i> </button>
             </div>
            </div>
           </div>
@@ -506,7 +513,7 @@
 
       <form class="form-horizontal" v-on:submit.prevent="submitTambahPelanggan()"> 
         <div class="modal-body">
-          <h3 class="text-center"><b>Tambah Pelanggan  </b></h3>
+          <h3 class="text-center"><b>Tambah Pelanggan </b></h3>
 
             <form-tambah-pelanggan :data="tambahPelanggan" :errors="errors"> </form-tambah-pelanggan> 
 
@@ -746,6 +753,7 @@ export default {
         tgl_lahir: '',
         komunitas: '',
       },
+      statusTambahPelanggan : '',
       session:'',
       pencarian: '',
       loading: true,
@@ -1017,9 +1025,11 @@ export default {
    $("#modal_selesai").hide();
    this.$refs.kode_kas.focus(); 
  },
-  tambahModalPelanggan(){
+  tambahModalPelanggan(data){
+   this.statusTambahPelanggan = data
    $("#modalTambahPelanggan").show();
    $("#modalSimpanPenjualan").hide();
+   $("#modal_selesai").hide();
  },
  saveFormKas() {
   var app = this;
@@ -1073,7 +1083,7 @@ export default {
         app.tambahPelanggan.tgl_lahir = ""
 
         $("#modalTambahPelanggan").hide()
-        $("#modalSimpanPenjualan").show()
+        this.statusTambahPelanggan == 1 ? $("#modal_selesai").show() : $("#modalSimpanPenjualan").show()
         $("#btnTambahPelanggan").html('Submit')
         $("#btnTambahPelanggan").prop('disabled', false)
 
@@ -1788,9 +1798,15 @@ closeModalJumlahProduk(){
   this.openSelectizeProduk();
 },
 closeModalTambahPelanggan(){  
-  $("#modalTambahPelanggan").hide();
-  $("#modalSimpanPenjualan").show(); 
-  this.openSelectizePelangganAntrian();
+   if(this.statusTambahPelanggan == 1) {
+      $("#modalTambahPelanggan").hide();
+      $("#modal_selesai").show(); 
+      this.openSelectizePelanggan();
+   }else{
+      $("#modalTambahPelanggan").hide();
+      $("#modalSimpanPenjualan").show(); 
+      this.openSelectizePelangganAntrian();
+   }
 },
 closeModalX(){
   $("#modal_tambah_kas").hide(); 
