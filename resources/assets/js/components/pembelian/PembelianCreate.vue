@@ -863,7 +863,7 @@ export default {
             axios.post(app.url_suplier, newsuplier)
             .then(function (resp) {
                 app.message = 'Menambah Suplier '+ app.tambahSuplier.nama_suplier;
-                app.alert(app.message);
+                app.alertBerhasil(app.message);
                 app.tambahSuplier.nama_suplier = '';
                 app.tambahSuplier.alamat = '';
                 app.tambahSuplier.no_telp = '';
@@ -883,7 +883,7 @@ export default {
             axios.post(app.url_tambah_kas, newkas)
             .then(function (resp) {
                 app.message = 'Menambah Kategori Transaksi '+ app.tambahKas.nama_kas;
-                app.alert(app.message);
+                app.alertBerhasil(app.message);
                 app.tambahKas.kode_kas = ''
                 app.tambahKas.nama_kas = ''
                 app.tambahKas.status_kas = 0
@@ -969,7 +969,7 @@ export default {
                     app.inputPembayaranPembelian.subtotal = subtotal                       
                     app.inputPembayaranPembelian.total_akhir  = subtotal
                     app.hitungPotonganPersen()
-                    app.alert("Menghapus Produk "+nama_produk);
+                    app.alertBerhasil("Menghapus Produk "+nama_produk);
                     app.loading = false;
                     app.inputTbsPembelian.id_tbs = ''
                 })
@@ -1067,7 +1067,7 @@ export default {
             axios.get(app.url+'/proses-tambah-tbs-pembelian?id_produk_tbs='+id_produk+'&jumlah_produk='+jumlah_produk+'&harga_produk='+harga_produk+'&satuan='+satuan[0]+'&satuan_dasar='+satuan[2]+'&status_harga='+status_harga)
             .then(function (resp) {
                 $("#modalJumlahProduk").hide();
-                app.alert("Menambahkan Produk "+titleCase(nama_produk));
+                app.alertBerhasil("Menambahkan Produk "+titleCase(nama_produk));
                 app.loading = false;
                 app.getResults();
 
@@ -1117,7 +1117,7 @@ export default {
             axios.get(app.url+'/proses-tbs-order-pembelian?id_order='+id_order+'&suplier_id='+suplier_id+'&faktur_order='+faktur_order)
             .then(function (resp) {
                 var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-                app.alert("Menerima Order Dari Supplier "+titleCase(suplier_order));
+                app.alertBerhasil("Menerima Order Dari Supplier "+titleCase(suplier_order));
                 app.loading = false;
                 app.getResults();        
 
@@ -1157,7 +1157,7 @@ export default {
             axios.get(app.url+'/proses-tbs-penerimaan-produk-pembelian?id_penerimaan='+id_penerimaan+'&suplier_id='+suplier_id+'&faktur_penerimaan='+faktur_penerimaan)
             .then(function (resp) {
                 var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) + parseInt(resp.data.subtotal)
-                app.alert("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
+                app.alertBerhasil("Penerimaan Produk Dari Supplier "+titleCase(suplier_penerimaan));
                 app.loading = false;
                 app.getResults();
 
@@ -1206,7 +1206,7 @@ export default {
                     app.loading = true;
                     axios.get(app.url+'/proses-edit-jumlah-tbs-pembelian?jumlah_edit_produk='+jumlah_produk+'&id_tbs_pembelian='+id)
                     .then(function (resp) {
-                        app.alert("Mengubah Jumlah Produk "+titleCase(nama_produk));
+                        app.alertBerhasil("Mengubah Jumlah Produk "+titleCase(nama_produk));
                         app.loading = false;
                         app.getResults();      
                         var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama))  + parseInt(resp.data.subtotal)
@@ -1307,7 +1307,7 @@ export default {
                     app.loading = true;
                     axios.get(app.url+'/proses-edit-harga-tbs-pembelian?harga_edit_produk='+harga_produk+'&id_harga='+id)
                     .then(function (resp) {
-                        app.alert("Mengubah Harga Produk "+titleCase(nama_produk));
+                        app.alertBerhasil("Mengubah Harga Produk "+titleCase(nama_produk));
                         app.loading = false;
                         app.getResults();
                         var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
@@ -1404,7 +1404,7 @@ export default {
             app.loading = true;
             axios.get(app.url+'/proses-edit-potongan-tbs-pembelian?potongan_edit_produk='+potongan+'&id_potongan='+id)
             .then(function (resp) {
-                app.alert("Mengubah Potongan Produk "+titleCase(nama_produk));
+                app.alertBerhasil("Mengubah Potongan Produk "+titleCase(nama_produk));
                 app.loading = false;
                 app.getResults();
                 var subtotal = (parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(subtotal_lama)) + parseInt(resp.data.subtotal);
@@ -1515,7 +1515,7 @@ export default {
             app.loading = true;
             axios.get(app.url+'/proses-edit-tax-tbs-pembelian?tax_edit_produk='+pajak+'&id_tax='+id+'&ppn_produk='+ppn_edit)
             .then(function (resp) {
-                app.alert("Mengubah Pajak Produk "+titleCase(nama_produk));
+                app.alertBerhasil("Mengubah Pajak Produk "+titleCase(nama_produk));
                 app.loading = false;
                 app.getResults();  
 
@@ -1547,7 +1547,7 @@ export default {
 
                         var subtotal = parseInt(app.inputPembayaranPembelian.subtotal) - parseInt(resp.data.subtotal)
                         app.getResults();
-                        app.alert("Membatalkan Transaksi Pembelian");
+                        app.alertBerhasil("Membatalkan Transaksi Pembelian");
                         app.inputPembayaranPembelian.suplier = ''
                         app.inputPembayaranPembelian.subtotal = 0
                         app.inputPembayaranPembelian.jatuh_tempo = ''
@@ -1728,7 +1728,7 @@ export default {
                         axios.post(app.url, newPembelian)
                         .then(function (resp) {
                             app.message = 'Berhasil Menambah Pembelian';
-                            app.alert(app.message);
+                            app.alertBerhasil(app.message);
                             app.$router.replace('/pembelian');
                             window.open('pembelian/cetak-besar-pembelian/'+resp.data.respons_pembelian,'_blank');
                         })
@@ -1800,6 +1800,14 @@ export default {
                 buttons: false,
                 timer: 1000
             });
+        },
+        alertBerhasil(pesan) {
+            this.$swal({
+                text: pesan,
+                icon: "success",
+                buttons: false,
+                timer: 1000
+            });  
         }
     }
 }

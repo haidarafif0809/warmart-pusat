@@ -1609,11 +1609,10 @@ prosesSelesaiPenjualan(value){
         app.inputTbsPenjualan.produk = ''   
         app.hitungKembalian(app.penjualan.pembayaran)
         $("#modal_selesai").hide();
+        app.loading = false;          
+
         window.open('penjualan/cetak-kecil-penjualan/'+resp.data.respons_penjualan,'_blank');
-        app.loading = false;
-
       }
-
     })
     .catch(function (resp) {  
 
