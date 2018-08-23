@@ -261,8 +261,8 @@ class DaftarProdukController extends Controller
         //PAGINATION DAFTAR PRODUK
             $produk_pagination = $data_produk->links();
         //PILIH KATEGORI
-            $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung())->where('id', $id);
-            $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', $this->idWarung())->where('id', '!=', $id);
+            $kategori        = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', self::idWarung())->where('id', $id);
+            $kategori_semua  = KategoriBarang::select(['id', 'nama_kategori_barang', 'kategori_icon'])->where('warung_id', self::idWarung())->where('id', '!=', $id);
             $kategori_produk = DaftarProdukController::produkKategori($kategori_semua);
             $daftar_warung   = DaftarProdukController::daftarWarung($warung_data);
             $data_kategori   = $kategori->first();
